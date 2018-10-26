@@ -8,7 +8,7 @@
     "node": ">=6.13.0"
   },
   "scripts": {
-    "seed": "bash ./seedDb.sh"
+    "seed": "./seedDb.sh"
   },
   "dependencies": {
     "express": "^4.16.4",

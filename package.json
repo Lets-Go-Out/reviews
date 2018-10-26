@@ -7,7 +7,9 @@
   "engines": {
     "node": ">=6.13.0"
   },
-  "scripts": {},
+  "scripts": {
+    "seed": "bash ./seedDb.sh"
+  },
   "dependencies": {
     "express": "^4.16.4",
     "moment": "^2.22.2",

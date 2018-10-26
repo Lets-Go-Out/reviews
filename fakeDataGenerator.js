@@ -12,7 +12,7 @@ for (let i = 1; i <= 100; i++) {
   const length = faker.random.number() % 3;
 
   for (let i = 0; i <= length; i++) {
-    fakeWords.push(faker.random.word())
+    fakeWords.push(faker.random.word());
   }
 
   fakeRestaurant.name = fakeWords.join(' ');
@@ -22,7 +22,7 @@ for (let i = 1; i <= 100; i++) {
 
 const fakeUsers = [];
 
-for(let i = 1; i <= 100; i++) {
+for (let i = 1; i <= 100; i++) {
   const fakeUser = {id: i};
   fakeUser.name = faker.name.findName();
   fakeUsers.push(fakeUser);
@@ -42,14 +42,14 @@ const fakeReviewTextGenerator = () => {
   }
 
   return reviewText.join('\n\n');
-}
+};
 
 const ratingGenerator = () => {
   //creates a random integer from 1 to 5, weighted to have more 4s and 5s appear
   let randomishNum = faker.random.number(42) + 1;
   const rating = Math.floor(Math.log2(randomishNum) + 1);
   return rating === 6 ? 5 : rating;
-}
+};
 
 const fakeReviewGenerator = (restaurantId) => {
   return {
@@ -64,15 +64,15 @@ const fakeReviewGenerator = (restaurantId) => {
     date: moment(faker.date.recent(400)).format('YYYY-MM-DD HH:MM:SS'),
     partySize: faker.random.number(6) + 2,
     text: fakeReviewTextGenerator(),
-  }
-}
+  };
+};
 
 const fakeReviews = [];
 
 const updateAverage = (newVal, avg, newNumOfThings) => {
   const oldTotal = avg * (newNumOfThings - 1);
   return (oldTotal + newVal) / newNumOfThings;
-}
+};
 
 fakeRestaurants.forEach(restaurant => {
   const numReviews = faker.random.number(14) + 3;
@@ -142,12 +142,12 @@ const restaurantCols = [
   'valueRating',
   'wyr',
   'numReviews'
-]
+];
 
 const userCols = [
   'id',
   'name'
-]
+];
 
 const reviewCols = [
   'userId',
@@ -161,7 +161,7 @@ const reviewCols = [
   'text',
   'date',
   'partySize'
-]
+];
 
 fs.writeFileSync('./fakeRestaurants.csv', toCSV(fakeRestaurants, restaurantCols));
 fs.writeFileSync('./fakeUsers.csv', toCSV(fakeUsers, userCols));

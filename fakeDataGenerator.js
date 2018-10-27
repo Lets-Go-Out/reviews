@@ -9,7 +9,7 @@ const fakeRestaurants = [];
 for (let i = 1; i <= 100; i++) {
   const fakeRestaurant = {id: i};
   const fakeWords = [];
-  const length = faker.random.number() % 3;
+  const length = faker.random.number(2);
 
   for (let i = 0; i <= length; i++) {
     fakeWords.push(faker.random.word());
@@ -33,14 +33,10 @@ const fakeReviewTextGenerator = () => {
   const reviewText = [];
   const paragraphs = faker.random.number(4);
   for (let p = 0; p <= paragraphs; p++) {
-    let paragraph = '';
     const sentences = faker.random.number(3) + 2;
-    for (let s = 0; s <= sentences; s++) {
-      paragraph += faker.lorem.sentence();
-    }
+    let paragraph = faker.lorem.paragraph(sentences);
     reviewText.push(paragraph);
   }
-
   return reviewText.join('\n\n');
 };
 

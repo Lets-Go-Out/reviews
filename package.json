@@ -8,10 +8,17 @@
     "node": ">=6.13.0"
   },
   "scripts": {
+    "seed": "./seedDb.sh"
   },
   "dependencies": {
+    "express": "^4.16.4",
+    "moment": "^2.22.2",
+    "mysql": "^2.16.0",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0"
   },
   "devDependencies": {
-    "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor"
+    "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
+    "faker": "^4.1.0"
   }
 }

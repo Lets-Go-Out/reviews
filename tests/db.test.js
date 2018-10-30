@@ -24,4 +24,4 @@ test('it gets reviews for a restaurant', done => {
   };
 
   db.getReviews(10, testCb);
-})
+});

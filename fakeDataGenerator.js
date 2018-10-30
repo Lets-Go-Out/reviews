@@ -9,7 +9,7 @@ const fakeRestaurants = [];
 for (let i = 1; i <= 100; i++) {
   const fakeRestaurant = {id: i};
   const fakeWords = [];
-  const length = faker.random.number(2);
+  const length = faker.random.number() % 3;
 
   for (let i = 0; i <= length; i++) {
     fakeWords.push(faker.random.word());

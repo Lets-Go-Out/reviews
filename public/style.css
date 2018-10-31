@@ -1,0 +1,15 @@
+.review{
+  line-height: 1em;
+}
+
+.truncated{
+  max-height: 3em;
+  overflow: hidden;
+}
+
+
+
+.reviews{
+  width: 60%;
+  margin-left: 60px;
+}

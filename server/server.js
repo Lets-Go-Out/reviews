@@ -3,6 +3,8 @@ const db = require('./db/db.js');
 
 const app = express();
 
+app.use(express.static('./public'));
+
 app.get('/restaurants/:restaurantid/reviewsummary', (req, res) => {
   db.getBasicInfo(req.params.restaurantid, (err, data) => {
     if (err) { return res.sendStatus(500); }
@@ -17,4 +19,4 @@ app.get('/restaurants/:restaurantid/reviews', (req, res) => {
   });
 });
 
-app.listen(3000);
+app.listen(3005);

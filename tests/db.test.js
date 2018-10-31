@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 const db = require('../server/db/db.js');
 
 afterAll(() => db.closeConnection(() => console.log('connection closed')));

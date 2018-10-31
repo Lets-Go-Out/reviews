@@ -19,4 +19,19 @@ app.get('/restaurants/:restaurantid/reviews', (req, res) => {
   });
 });
 
+app.patch('/reviews/:reviewid/report', (req, res) => {
+  db.report(req.params.reviewid, (err, data) => {
+    if (err) { return res.sendStatus(500); }
+    response.sendStatus(204);
+  });
+});
+
+app.patch('/reviews/:reviewid/markhelpful', (req, res) => {
+  db.markHelpful(req.params.reviewid, (err, data) => {
+    if (err) { return res.sendStatus(500); }
+    response.sendStatus(204);
+  });
+});
+
+
 app.listen(3005);

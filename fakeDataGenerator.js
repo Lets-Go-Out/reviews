@@ -6,12 +6,12 @@ faker.seed(105);
 
 const fakeRestaurants = [];
 
-for (let i = 1; i <= 100; i++) {
-  const fakeRestaurant = {id: i};
+for (let i = 1; i <= 100; i += 1) {
+  const fakeRestaurant = { id: i };
   const fakeWords = [];
   const length = faker.random.number() % 3;
 
-  for (let i = 0; i <= length; i++) {
+  for (let idx = 0; idx <= length; idx += 1) {
     fakeWords.push(faker.random.word());
   }
 
@@ -22,9 +22,10 @@ for (let i = 1; i <= 100; i++) {
 
 const fakeUsers = [];
 
-for (let i = 1; i <= 100; i++) {
-  const fakeUser = {id: i};
+for (let i = 1; i <= 100; i += 1) {
+  const fakeUser = { id: i };
   fakeUser.name = faker.name.findName();
+  fakeUser.numReviews = faker.random.number(50) + 10;
   fakeUsers.push(fakeUser);
 }
 
@@ -32,79 +33,82 @@ for (let i = 1; i <= 100; i++) {
 const fakeReviewTextGenerator = () => {
   const reviewText = [];
   const paragraphs = faker.random.number(4);
-  for (let p = 0; p <= paragraphs; p++) {
+  for (let p = 0; p <= paragraphs; p += 1) {
     const sentences = faker.random.number(3) + 2;
-    let paragraph = faker.lorem.paragraph(sentences);
+    const paragraph = faker.lorem.paragraph(sentences);
     reviewText.push(paragraph);
   }
   return reviewText.join('\n\n');
 };
 
 const ratingGenerator = () => {
-  //creates a random integer from 1 to 5, weighted to have more 4s and 5s appear
-  let randomishNum = faker.random.number(42) + 1;
+  // creates a random integer from 1 to 5, weighted to have more 4s and 5s appear
+  const randomishNum = faker.random.number(42) + 1;
   const rating = Math.floor(Math.log2(randomishNum) + 1);
   return rating === 6 ? 5 : rating;
 };
 
-const fakeReviewGenerator = (restaurantId) => {
-  return {
-    restaurantId,
-    userId: faker.random.number(99) + 1,
-    overallRating: ratingGenerator(),
-    foodRating: ratingGenerator(),
-    serviceRating: ratingGenerator(),
-    ambienceRating: ratingGenerator(),
-    valueRating: ratingGenerator(),
-    wyr: faker.random.number(4) !== 4 ? 1 : 0,
-    date: (new Date(faker.date.recent(400))).toISOString(),
-    partySize: faker.random.number(6) + 2,
-    text: fakeReviewTextGenerator(),
-  };
-};
+
+const fakeReviewGenerator = restaurantId => ({
+  restaurantId,
+  userId: faker.random.number(99) + 1,
+  overallRating: ratingGenerator(),
+  foodRating: ratingGenerator(),
+  serviceRating: ratingGenerator(),
+  ambienceRating: ratingGenerator(),
+  valueRating: ratingGenerator(),
+  wyr: faker.random.number(4) !== 4 ? 1 : 0,
+  date: moment(faker.date.recent(400)).format('YYYY-MM-DD HH:MM:SS'),
+  partySize: faker.random.number(6) + 2,
+  text: fakeReviewTextGenerator(),
+  timesReported: 0,
+  timesMarkedHelpful: 0,
+});
+
 
 const fakeReviews = [];
 
-const updateAverage = (newVal, avg, newNumOfThings) => {
+const newAvg = (newVal, avg, newNumOfThings) => {
   const oldTotal = avg * (newNumOfThings - 1);
   return (oldTotal + newVal) / newNumOfThings;
 };
 
-fakeRestaurants.forEach(restaurant => {
+for (let i = 0; i < fakeRestaurants.length; i += 1) {
+  const rest = fakeRestaurants[i];
   const numReviews = faker.random.number(14) + 3;
 
-  for (let i = 0; i < numReviews; i++) {
-    const review = fakeReviewGenerator(restaurant.id);
+  for (let idx = 0; idx < numReviews; idx += 1) {
+    const review = fakeReviewGenerator(rest.id);
     const {
       overallRating,
       foodRating,
       serviceRating,
       ambienceRating,
       valueRating,
-      wyr
+      wyr,
     } = review;
-    if (!restaurant.numReviews) {
-      Object.assign(restaurant, {
+    if (!rest.numReviews) {
+      Object.assign(rest, {
         numReviews: 1,
         overallRating,
         foodRating,
         serviceRating,
         ambienceRating,
         valueRating,
-        wyr: wyr ? 100 : 0
+        wyr: wyr ? 100 : 0,
       });
     } else {
-      restaurant.numReviews += 1;
-      restaurant.overallRating = updateAverage(overallRating, restaurant.overallRating, restaurant.numReviews);
-      restaurant.foodRating = updateAverage(foodRating, restaurant.foodRating, restaurant.numReviews);
-      restaurant.serviceRating = updateAverage(serviceRating, restaurant.serviceRating, restaurant.numReviews);
-      restaurant.ambienceRating = updateAverage(ambienceRating, restaurant.ambienceRating, restaurant.numReviews);
-      restaurant.valueRating = updateAverage(valueRating, restaurant.valueRating, restaurant.numReviews);
-      restaurant.wyr = updateAverage(wyr ? 100 : 0, restaurant.wyr, restaurant.numReviews);
+      rest.numReviews += 1;
+      rest.overallRating = newAvg(overallRating, rest.overallRating, rest.numReviews);
+      rest.foodRating = newAvg(foodRating, rest.foodRating, rest.numReviews);
+      rest.serviceRating = newAvg(serviceRating, rest.serviceRating, rest.numReviews);
+      rest.ambienceRating = newAvg(ambienceRating, rest.ambienceRating, rest.numReviews);
+      rest.valueRating = newAvg(valueRating, rest.valueRating, rest.numReviews);
+      rest.wyr = newAvg(wyr ? 100 : 0, rest.wyr, rest.numReviews);
     }
     fakeReviews.push(review);
   }
-});
+}
 
 const toCSV = (arrayOfObjects, arrayOfColNames, isIdprovided = true) => {
   const result = [];
@@ -116,7 +120,7 @@ const toCSV = (arrayOfObjects, arrayOfColNames, isIdprovided = true) => {
   arrayOfObjects.forEach((obj, idx) => {
     const row = [];
     if (!isIdprovided) {
-      row[0] = idx + 1; 
+      row[0] = idx + 1;
     }
     arrayOfColNames.forEach((colName) => {
       row.push(`"${obj[colName]}"`);
@@ -125,7 +129,6 @@ const toCSV = (arrayOfObjects, arrayOfColNames, isIdprovided = true) => {
   });
 
   return result.join('\n');
-
 };
 
 const restaurantCols = [
@@ -137,12 +140,12 @@ const restaurantCols = [
   'ambienceRating',
   'valueRating',
   'wyr',
-  'numReviews'
+  'numReviews',
 ];
 
 const userCols = [
   'id',
-  'name'
+  'name',
 ];
 
 const reviewCols = [
@@ -156,10 +159,11 @@ const reviewCols = [
   'wyr',
   'text',
   'date',
-  'partySize'
+  'partySize',
+  'timesReported',
+  'timesMarkedHelpful',
 ];
 
 fs.writeFileSync('./fakeRestaurants.csv', toCSV(fakeRestaurants, restaurantCols));
 fs.writeFileSync('./fakeUsers.csv', toCSV(fakeUsers, userCols));
 fs.writeFileSync('./fakeReviews.csv', toCSV(fakeReviews, reviewCols, false));
-

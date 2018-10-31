@@ -3,7 +3,7 @@
 }
 
 .truncated{
-  max-height: 3em;
+  max-height: 4em;
   overflow: hidden;
 }
 
@@ -12,4 +12,23 @@
 .reviews{
   width: 60%;
   margin-left: 60px;
+}
+
+.barBackground {
+  border: 1px solid black;
+  height: 15px;
+  width: 100px;
+  margin: 5px;
+  display: inline-block;
+  box-sizing: border-box;
+  margin-top: 5px;
+}
+
+.barForeground {
+  background-color: red;
+  height: 100%;
+}
+
+.barBackground:hover{
+  border: 2px solid red;
 }

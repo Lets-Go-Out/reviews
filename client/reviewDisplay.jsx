@@ -1,12 +1,7 @@
 import React from 'react';
+import moment from 'moment';
+import Stars from './Stars.jsx';
 
-const Stars = (props) => {
-  let stars = '';
-  for (let i = 1; i <= 5; i++) {
-    stars += i <= props.num ? '&starf; ' : '&star; ';
-  }
-  return (<div>{stars}</div>);
-};
 
 class Review extends React.Component {
   constructor(props) {
@@ -38,10 +33,10 @@ class Review extends React.Component {
     return (
       <div>
         <div>{this.props.data.name}</div>
-        <Stars num={this.props.data.overall} />
-        <div>Dined on {this.props.data.date}</div>
+        <div><Stars num={this.props.data.overall} /></div>
+        <div>Dined on {moment(this.props.data.date).format('MMMM Do YYYY')}</div>
         <div>Overall {this.props.data.overall} &middot; Food {this.props.data.food} &middot; Service {this.props.data.service} &middot; Ambience {this.props.data.ambience}</div>
-        <div ref={this.review} className={this.state.expanded ? 'full review' : 'truncated review'}>
+        <div ref={this.review} className={this.state.expanded ? 'review' : 'truncated review'}>
           <div ref={this.text}>
             {this.props.data.text.split('\n\n').map((paragraph, idx) => {
               return (<p key={idx}>{paragraph}</p>);

@@ -21,6 +21,7 @@ CREATE TABLE users (
   id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(50) NOT NULL,
   numReviews INT DEFAULT 0,
+  location VARCHAR(50) NOT NULL,
   PRIMARY KEY (id)
 );
 

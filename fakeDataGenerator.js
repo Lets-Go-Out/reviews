@@ -26,6 +26,7 @@ for (let i = 1; i <= 100; i += 1) {
   const fakeUser = { id: i };
   fakeUser.name = faker.name.findName();
   fakeUser.numReviews = faker.random.number(50) + 10;
+  fakeUser.location = faker.address.city();
   fakeUsers.push(fakeUser);
 }
 
@@ -146,6 +147,8 @@ const restaurantCols = [
 const userCols = [
   'id',
   'name',
+  'numReviews',
+  'location',
 ];
 
 const reviewCols = [

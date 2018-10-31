@@ -4,7 +4,7 @@ const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'droptable'
+  database: 'droptable',
 });
 
 module.exports.getBasicInfo = (restaurantId, cb) => {
@@ -13,7 +13,7 @@ module.exports.getBasicInfo = (restaurantId, cb) => {
 };
 
 module.exports.getReviews = (restaurantId, cb) => {
-  const queryStr = 'SELECT reviews.*, users.name, users.numReviews FROM reviews INNER JOIN users ON reviews.restaurant = ? AND reviews.user = users.id';
+  const queryStr = 'SELECT reviews.*, users.name, users.numReviews AS userNumReviews, users.location AS userLocation FROM reviews INNER JOIN users ON reviews.restaurant = ? AND reviews.user = users.id';
   connection.query(queryStr, [restaurantId], cb);
 };
 
@@ -29,4 +29,5 @@ module.exports.report = (reviewId, cb) => {
 };
 
 
-module.exports.closeConnection = (cb) => connection.end(cb);
+module.exports.closeConnection = cb => connection.end(cb);
+

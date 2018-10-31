@@ -59,7 +59,7 @@ const fakeReviewGenerator = restaurantId => ({
   ambienceRating: ratingGenerator(),
   valueRating: ratingGenerator(),
   wyr: faker.random.number(4) !== 4 ? 1 : 0,
-  date: moment(faker.date.recent(400)).format('YYYY-MM-DD HH:MM:SS'),
+  date: (new Date(faker.date.recent(400))).toISOString(),
   partySize: faker.random.number(6) + 2,
   text: fakeReviewTextGenerator(),
   timesReported: 0,

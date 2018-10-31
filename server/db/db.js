@@ -30,4 +30,3 @@ module.exports.report = (reviewId, cb) => {
 
 
 module.exports.closeConnection = cb => connection.end(cb);
-

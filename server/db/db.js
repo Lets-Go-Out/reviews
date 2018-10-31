@@ -15,6 +15,6 @@ module.exports.getBasicInfo = (restaurantId, cb) => {
 module.exports.getReviews = (restaurantId, cb) => {
   const queryStr = 'SELECT reviews.*, users.name FROM reviews INNER JOIN users ON reviews.restaurant = ? AND reviews.user = users.id';
   connection.query(queryStr, [restaurantId], cb);
-}
+};
 
 module.exports.closeConnection = (cb) => connection.end(cb);

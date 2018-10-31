@@ -44,6 +44,7 @@ class Review extends React.Component {
           </div>
         </div>
         {this.state.long ? <button onClick={() => this.readMoreHandler()}>{this.state.expanded ? 'Read less' : 'Read more'}</button> : null}
+        <button>report</button><button>helpful</button>
       </div>
     );
   }

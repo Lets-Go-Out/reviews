@@ -33,6 +33,7 @@ class Reviews extends React.Component {
       .catch(err => console.log(err));
   }
 
+  //gets distribution of stars for a restaurant, for display in bar chart
   countReviews() {
     const starsCount = {};
     this.state.reviews.forEach(review => {
@@ -114,6 +115,6 @@ class Reviews extends React.Component {
   }
 }
 
-ReactDOM.render(<Reviews id="5" />, document.getElementById('reviews'));
+ReactDOM.render(<Reviews id="25" />, document.getElementById('reviews'));
 
 // export default Reviews;

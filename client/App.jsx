@@ -156,3 +156,4 @@ Reviews.propTypes = {
 };
 
 ReactDOM.render(<Reviews id="25" />, document.getElementById('reviews'));
+export default Reviews;

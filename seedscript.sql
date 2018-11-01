@@ -20,6 +20,8 @@ CREATE TABLE restaurants (
 CREATE TABLE users (
   id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(50) NOT NULL,
+  numReviews INT DEFAULT 0,
+  location VARCHAR(50) NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -36,6 +38,8 @@ CREATE TABLE reviews (
   text VARCHAR(4000) NOT NULL,
   date TIMESTAMP NOT NULL,
   partySize TINYINT NOT NULL,
+  timesReported INT DEFAULT 0,
+  timesMarkedHelpful INT DEFAULT 0,
   PRIMARY KEY (id),
   INDEX (restaurant),
   INDEX (user),

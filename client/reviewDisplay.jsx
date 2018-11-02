@@ -46,7 +46,6 @@ class Review extends React.Component {
   }
 
 
-
   render() {
     const { data } = this.props;
     const { expanded, long } = this.state;

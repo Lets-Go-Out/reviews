@@ -23,7 +23,7 @@ class Reviews extends React.Component {
       filterParam: null,
       filtersChecked: {},
     };
-    this.filters = ['recent', 'lorem'];
+    this.filters = ['recent', 'omnis'];
     const { filtersChecked } = this.state;
     this.filters.forEach((param) => { filtersChecked[param] = false; });
   }
@@ -76,7 +76,7 @@ class Reviews extends React.Component {
 
   selectFilter(param) {
     const newFilters = {};
-    this.filters.forEach(param => newFilters[param] = false);
+    this.filters.forEach((filterTerm) => { newFilters[filterTerm] = false; });
     if (param !== null) {
       Object.assign(newFilters, { [param]: true });
     }
@@ -120,7 +120,7 @@ class Reviews extends React.Component {
       return reviews.filter(review => Date.now() - review.date > 2592000000);
     }
     if (typeof filterParam === 'string') {
-      return reviews.filter(review => review.text.includes(filterParam));
+      return reviews.filter(review => review.text.includes(` ${filterParam} `));
     }
     return reviews;
   }
@@ -129,7 +129,6 @@ class Reviews extends React.Component {
     const { info, starsCount, filtersChecked } = this.state;
     const { reviews } = this.state;
     let reviewsToDisplay = this.filterReviews();
-    console.log(reviewsToDisplay);
     reviewsToDisplay.sort((a, b) => this.sortFunction(a, b));
     reviewsToDisplay = reviewsToDisplay.map(review => <Review data={review} key={review.id} />);
     if (!reviews.length || !info.foodAvg) { return <div />; }
@@ -143,6 +142,7 @@ class Reviews extends React.Component {
         <div>
           {this.filters.map(param => (
             <Checkbox
+              key={param}
               label={param}
               status={filtersChecked[param]}
               onChange={() => this.checkBoxHandler(param)}

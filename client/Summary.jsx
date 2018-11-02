@@ -6,6 +6,11 @@ const Summary = ({ info, starsCount, changeSort }) => {
   return (
     <div>
       <div>
+        <h2>
+          {`What ${info.numReviews} People Are Saying`}
+        </h2>
+      </div>
+      <div>
         Overall Ratings and Reviews
       </div>
       <div>

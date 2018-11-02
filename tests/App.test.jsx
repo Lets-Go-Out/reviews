@@ -46,6 +46,17 @@ it('renders a summary', () => {
   expect(wrapper.find('Summary')).toHaveLength(1);
 });
 
+it('filters reviews', () => {
+  const wrapper = shallow(<Reviews id={randoId} />);
+  const instance = wrapper.instance();
+  instance.checkBoxHandler('recent');
+  expect(instance.state.filterParam).toBe('recent');
+});
+
+it('renders checkboxes for review filtering', () => {
+  const wrapper = shallow(<Reviews id={randoId} />);
+  expect(wrapper.find('Checkbox').length).toBeGreaterThan(0);
+});
 
 // it('displays basic info about a restaurant\'s reviews', () => {
 //   const wrapper = mount(<Reviews id="3"/>);

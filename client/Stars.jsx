@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 const Stars = (props) => {
   const stars = [];
   for (let i = 1; i <= 5; i += 1) {
-    stars.push(i <= props.num ? '\u2605' : '\u2606');
+    stars.push(i <= props.num ? <div className="fullStar">{'\u2605'}</div> : <div className="emptyStar">{'\u2605'}</div>);
   }
   return (
-    <span>
-      {stars.join(' ')}
-    </span>);
+    <div className="stars">
+      {stars}
+    </div>);
 };
 
 Stars.defaultProps = {

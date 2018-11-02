@@ -1,10 +1,11 @@
 /* eslint-env browser */
 
 import React from 'react';
-import moment from 'moment';
-import Stars from './Stars.jsx';
 import PropTypes from 'prop-types';
-import API from './APICalls.js'
+import moment from 'moment';
+import Stars from './Stars';
+
+import API from './APICalls';
 
 
 class Review extends React.Component {
@@ -17,6 +18,11 @@ class Review extends React.Component {
     };
     this.review = React.createRef();
     this.text = React.createRef();
+    const { data } = this.props;
+    const names = data.name.split(' ');
+    this.initials = names[0][0] + names[1][0];
+    const colors = ['pink', 'blue', 'orange', 'violet'];
+    this.color = colors[Math.floor(Math.random() * 4)];
   }
 
 
@@ -49,45 +55,61 @@ class Review extends React.Component {
   render() {
     const { data } = this.props;
     const { expanded, long } = this.state;
+    const { initials, color } = this;
+
     return (
-      <div>
-        <div>
-          {data.name}
-        </div>
-        <div>
-          {`${data.userNumReviews} reviews`}
-        </div>
-        <div>
-          <Stars num={data.overall} />
-        </div>
-        <div>
-          {`Dined on ${moment(data.date).format('MMMM Do YYYY')}`}
-        </div>
-        <div>
-          {`Overall ${data.overall} \u00B7 Food ${data.food} \u00B7 Service ${data.service} \u00B7 Ambience ${data.ambience}`}
-        </div>
-        <div ref={this.review} className={expanded ? 'review' : 'truncated review'}>
-          <div ref={this.text}>
-            {data.text.split('\n\n').map(paragraph => (
-              <p>
-                {paragraph}
-              </p>
-            ))}
+      <div className="reviewContainer">
+        <div className="reviewAndUser">
+          <div className="userInfo">
+            <div className={`userIcon ${color}`}>
+              {initials}
+            </div>
+            <div>
+              {data.name}
+            </div>
+            <div>
+              {data.userLocation}
+            </div>
+            <div>
+              {`${data.userNumReviews} reviews`}
+            </div>
+          </div>
+          <div className="review">
+            <div>
+              <Stars num={data.overall} />
+            </div>
+            <div>
+              {`Dined on ${moment(data.date).format('MMMM Do YYYY')}`}
+            </div>
+            <div>
+              {`Overall ${data.overall} \u00B7 Food ${data.food} \u00B7 Service ${data.service} \u00B7 Ambience ${data.ambience}`}
+            </div>
+            <div ref={this.review} className={expanded ? 'review' : 'truncated review'}>
+              <div ref={this.text}>
+                {data.text.split('\n\n').map(paragraph => (
+                  <p>
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+            <div className="buttonRow">
+              {long
+                ? (
+                  <button type="button" className="readMore" onClick={() => this.readMoreHandler()}>
+                    {expanded ? 'Read less' : 'Read more'}
+                  </button>
+                )
+                : null}
+              <button type="button" onClick={() => this.report()}>
+                report
+              </button>
+              <button type="button" onClick={() => this.markHelpful()}>
+                helpful
+              </button>
+            </div>
           </div>
         </div>
-        {long
-          ? (
-            <button type="button" className="readMore" onClick={() => this.readMoreHandler()}>
-              {expanded ? 'Read less' : 'Read more'}
-            </button>
-          )
-          : null}
-        <button type="button" onClick={() => this.report()}>
-          report
-        </button>
-        <button type="button" onClick={() => this.markHelpful()}>
-          helpful
-        </button>
       </div>
     );
   }

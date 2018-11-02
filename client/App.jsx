@@ -2,13 +2,10 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
-import Review from './reviewDisplay.jsx';
-import Stars from './Stars.jsx';
-import BarChart from './BarChart.jsx';
-import APICalls from './APICalls.js';
-import Summary from './Summary.jsx';
-import Checkbox from './Checkbox.jsx';
+import Review from './reviewDisplay';
+import APICalls from './APICalls';
+import Summary from './Summary';
+import Checkbox from './Checkbox';
 
 
 class Reviews extends React.Component {
@@ -23,7 +20,7 @@ class Reviews extends React.Component {
       filterParam: null,
       filtersChecked: {},
     };
-    this.filters = ['recent', 'omnis'];
+    this.filters = ['recent', 'good for groups', 'omnis'];
     const { filtersChecked } = this.state;
     this.filters.forEach((param) => { filtersChecked[param] = false; });
   }
@@ -119,6 +116,9 @@ class Reviews extends React.Component {
     if (filterParam === 'recent') {
       return reviews.filter(review => Date.now() - review.date > 2592000000);
     }
+    if (filterParam === 'good for groups') {
+      return reviews.filter(review => review.partySize > 4);
+    }
     if (typeof filterParam === 'string') {
       return reviews.filter(review => review.text.includes(` ${filterParam} `));
     }
@@ -139,7 +139,7 @@ class Reviews extends React.Component {
           starsCount={starsCount}
           changeSort={e => this.changeSort(e.target.value)}
         />
-        <div>
+        <div className="filtersContainer">
           {this.filters.map(param => (
             <Checkbox
               key={param}

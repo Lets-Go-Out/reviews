@@ -9,7 +9,7 @@
   },
   "scripts": {
     "seed": "./seedDb.sh",
-    "test": "jest",
+    "test": "jest --coverage --",
     "build": "webpack -w -d"
   },
   "dependencies": {
@@ -27,11 +27,18 @@
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
     "faker": "^4.1.0",
     "jest": "^23.6.0",
     "webpack": "^4.23.1",
     "webpack-cli": "^3.1.2"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "<rootDir>tests/setupTests.js"
   }
 }

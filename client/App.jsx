@@ -6,6 +6,9 @@ import ReactDOM from 'react-dom';
 import Review from './reviewDisplay.jsx';
 import Stars from './Stars.jsx';
 import BarChart from './BarChart.jsx';
+import APICalls from './APICalls.js';
+import Summary from './Summary.jsx';
+import Checkbox from './Checkbox.jsx';
 
 
 class Reviews extends React.Component {
@@ -17,45 +20,40 @@ class Reviews extends React.Component {
       sortBy: 'date',
       sortDir: -1,
       starsCount: {},
+      filterParam: null,
+      filtersChecked: {},
     };
+    this.filters = ['recent', 'omnis'];
+    const { filtersChecked } = this.state;
+    this.filters.forEach((param) => { filtersChecked[param] = false; });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getBasicInfo();
     this.getReviews();
   }
 
   getBasicInfo() {
     const { id } = this.props;
-    fetch(`/restaurants/${id}/reviewsummary`)
-      .then((response) => {
-        if (response.status === 500) { throw new Error('500 internal server error'); }
-        return response.json();
-      })
-      .then(info => this.setState({ info }))
-      .catch(err => console.log(err));
+    APICalls.getBasicInfo(id, info => this.setState({ info }));
   }
 
   getReviews() {
     const { id } = this.props;
-    fetch(`/restaurants/${id}/reviews`)
-      .then((response) => {
-        if (response.status === 500) { throw new Error('500 internal server error'); }
-        return response.json();
-      })
-      .then((reviews) => {
-        reviews.forEach(review => Object.assign(review, { date: new Date(review.date) }));
-        const today = new Date();
-        let recent = reviews.filter(review => today - review.date <= 7889400000);
-        recent = recent.map(review => review.overall);
-        const { info } = this.state;
-        const sum = (a, b) => a + b;
-        const newInfo = Object.assign({}, info, { recent: recent.reduce(sum) / recent.length });
-        this.setState({ info: newInfo });
-        this.setState({ reviews });
-        this.countReviews();
-      })
-      .catch(err => console.log(err));
+    APICalls.getReviews(id, reviews => this.shapeReviews(reviews));
+  }
+
+  shapeReviews(reviews) {
+    reviews.forEach(review => Object.assign(review, { date: new Date(review.date) }));
+    const today = new Date();
+    let recent = reviews.filter(review => today - review.date <= 7889400000);
+    recent = recent.map(review => review.overall);
+    const { info } = this.state;
+    const sum = (a, b) => a + b;
+    const newInfo = Object.assign({}, info, { recent: recent.reduce(sum) / recent.length });
+    this.setState({ info: newInfo });
+    this.setState({ reviews });
+    this.countReviews();
   }
 
   // gets distribution of stars for a restaurant, for display in bar chart
@@ -68,13 +66,33 @@ class Reviews extends React.Component {
     });
     const keys = Object.keys(starsCount);
     keys.forEach((key) => { starsCount[key] /= reviews.length; });
-    console.log(starsCount);
     this.setState({ starsCount });
   }
 
   sortFunction(a, b) {
     const { sortDir, sortBy } = this.state;
     return sortDir * (a[sortBy] - b[sortBy]);
+  }
+
+  selectFilter(param) {
+    const newFilters = {};
+    this.filters.forEach((filterTerm) => { newFilters[filterTerm] = false; });
+    if (param !== null) {
+      Object.assign(newFilters, { [param]: true });
+    }
+    this.setState({
+      filtersChecked: newFilters,
+      filterParam: param,
+    });
+  }
+
+  checkBoxHandler(param) {
+    const { filterParam } = this.state;
+    if (param === filterParam) {
+      this.selectFilter(null);
+    } else {
+      this.selectFilter(param);
+    }
   }
 
   changeSort(sortParam) {
@@ -96,52 +114,44 @@ class Reviews extends React.Component {
     }
   }
 
+  filterReviews() {
+    const { filterParam, reviews } = this.state;
+    if (filterParam === 'recent') {
+      return reviews.filter(review => Date.now() - review.date > 2592000000);
+    }
+    if (typeof filterParam === 'string') {
+      return reviews.filter(review => review.text.includes(` ${filterParam} `));
+    }
+    return reviews;
+  }
 
   render() {
-    const { info, starsCount } = this.state;
-    let { reviews } = this.state;
-    console.log(reviews);
-    reviews.sort((a, b) => this.sortFunction(a, b));
-    reviews = reviews.map(review => <Review data={review} key={review.id} />);
-    if (!reviews.length) { return <div />; }
+    const { info, starsCount, filtersChecked } = this.state;
+    const { reviews } = this.state;
+    let reviewsToDisplay = this.filterReviews();
+    reviewsToDisplay.sort((a, b) => this.sortFunction(a, b));
+    reviewsToDisplay = reviewsToDisplay.map(review => <Review data={review} key={review.id} />);
+    if (!reviews.length || !info.foodAvg) { return <div />; }
     return (
-      <div className="reviews">
+      <div>
+        <Summary
+          info={info}
+          starsCount={starsCount}
+          changeSort={e => this.changeSort(e.target.value)}
+        />
         <div>
-          Overall Ratings and Reviews
+          {this.filters.map(param => (
+            <Checkbox
+              key={param}
+              label={param}
+              status={filtersChecked[param]}
+              onChange={() => this.checkBoxHandler(param)}
+            />
+          ))}
         </div>
-        <div>
-          <Stars num={Math.round(info.recent)} />
-          {` ${info.recent.toFixed(2)} based on recent ratings`}
+        <div className="reviews">
+          {reviewsToDisplay}
         </div>
-        <div>
-          {`${info.foodAvg.toFixed(2)} Food`}
-        </div>
-        <div>
-          {`${info.serviceAvg.toFixed(2)} Service`}
-        </div>
-        <div>
-          {`${info.ambienceAvg.toFixed(2)} Ambience`}
-        </div>
-        <div>
-          {`${info.valueAvg.toFixed(2)} Value`}
-        </div>
-        <BarChart proportions={starsCount} />
-        <div>
-          Sort by
-          <br />
-          <select onChange={e => this.changeSort(e.target.value)}>
-            <option value="date">
-              Newest
-            </option>
-            <option value="best">
-              Highest rating
-            </option>
-            <option value="worst">
-              Lowest rating
-            </option>
-          </select>
-        </div>
-        {reviews}
       </div>
     );
   }
@@ -155,4 +165,4 @@ Reviews.propTypes = {
   id: PropTypes.string,
 };
 
-ReactDOM.render(<Reviews id="25" />, document.getElementById('reviews'));
+export default Reviews;

@@ -1,6 +1,10 @@
+/* eslint-env browser */
+
 import React from 'react';
 import moment from 'moment';
 import Stars from './Stars.jsx';
+import PropTypes from 'prop-types';
+import API from './APICalls.js'
 
 
 class Review extends React.Component {
@@ -9,47 +13,93 @@ class Review extends React.Component {
     this.long = undefined;
     this.state = {
       expanded: false,
-      long: true
+      long: true,
     };
     this.review = React.createRef();
     this.text = React.createRef();
   }
 
-  readMoreHandler() {
-    this.setState({expanded: !this.state.expanded});
-  }
 
   componentDidMount() {
     this.checkReviewLength();
-    window.addEventListener('resize', () => this.checkReviewLength());    
+    window.addEventListener('resize', () => this.checkReviewLength());
+  }
+
+  readMoreHandler() {
+    const { expanded } = this.state;
+    this.setState({ expanded: !expanded });
   }
 
   checkReviewLength() {
     const long = this.review.current.clientHeight < this.text.current.clientHeight;
-    this.setState({long});
+    this.setState({ long });
   }
 
+  markHelpful() {
+    const { data } = this.props;
+    API.markHelpful(data.id, () => console.log('this review marked helpful'));
+  }
+
+  report() {
+    const { data } = this.props;
+    API.report(data.id, () => console.log('this review reported'));
+  }
+
+
+
   render() {
+    const { data } = this.props;
+    const { expanded, long } = this.state;
     return (
       <div>
-        <div>{this.props.data.name}</div>
-        <div><Stars num={this.props.data.overall} /></div>
-        <div>Dined on {moment(this.props.data.date).format('MMMM Do YYYY')}</div>
-        <div>Overall {this.props.data.overall} &middot; Food {this.props.data.food} &middot; Service {this.props.data.service} &middot; Ambience {this.props.data.ambience}</div>
-        <div ref={this.review} className={this.state.expanded ? 'review' : 'truncated review'}>
+        <div>
+          {data.name}
+        </div>
+        <div>
+          {`${data.userNumReviews} reviews`}
+        </div>
+        <div>
+          <Stars num={data.overall} />
+        </div>
+        <div>
+          {`Dined on ${moment(data.date).format('MMMM Do YYYY')}`}
+        </div>
+        <div>
+          {`Overall ${data.overall} \u00B7 Food ${data.food} \u00B7 Service ${data.service} \u00B7 Ambience ${data.ambience}`}
+        </div>
+        <div ref={this.review} className={expanded ? 'review' : 'truncated review'}>
           <div ref={this.text}>
-            {this.props.data.text.split('\n\n').map((paragraph, idx) => {
-              return (<p key={idx}>{paragraph}</p>);
-            })}
+            {data.text.split('\n\n').map(paragraph => (
+              <p>
+                {paragraph}
+              </p>
+            ))}
           </div>
         </div>
-        {this.state.long ? <button onClick={() => this.readMoreHandler()}>{this.state.expanded ? 'Read less' : 'Read more'}</button> : null}
-        <button>report</button><button>helpful</button>
+        {long
+          ? (
+            <button type="button" className="readMore" onClick={() => this.readMoreHandler()}>
+              {expanded ? 'Read less' : 'Read more'}
+            </button>
+          )
+          : null}
+        <button type="button" onClick={() => this.report()}>
+          report
+        </button>
+        <button type="button" onClick={() => this.markHelpful()}>
+          helpful
+        </button>
       </div>
     );
   }
-
 }
 
-export default Review;
+Review.defaultProps = {
+  data: {},
+};
 
+Review.propTypes = {
+  data: PropTypes.object,
+};
+
+export default Review;

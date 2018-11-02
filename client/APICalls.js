@@ -31,6 +31,7 @@ const API = {
       .then(() => cb())
       .catch(err => console.log(err));
   },
+
   report: (id, cb) => {
     fetch(`/reviews/${id}/report`, {
       method: 'PATCH',

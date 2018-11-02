@@ -6,17 +6,19 @@ const BarChart = (props) => {
     const width = props.proportions[i] * 100 || 0;
     const style = { width: `${width}%` };
     bars.push(
-      <div className="barContainer">
+      <div  key={i} className="barContainer">
         {i}
-        <div key={i} className="barBackground">
+        <div className="barBackground">
           <div className="barForeground" style={style} />
         </div>
       </div>,
     );
   }
-  return <div>
-    {bars}
-  </div>;
+  return (
+    <div>
+      {bars}
+    </div>
+  );
 };
 
 export default BarChart;

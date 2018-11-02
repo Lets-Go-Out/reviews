@@ -17,7 +17,6 @@ const fakeStarsCount = {
 const fakeInfo = JSON.parse(fs.readFileSync(path.join(__dirname, '/sampleReviewSummary.json')));
 Object.assign(fakeInfo, { recent: 4 });
 
-console.log('HELLO MY NAME IS', fakeInfo);
 
 const fakeChangeSort = jest.fn();
 

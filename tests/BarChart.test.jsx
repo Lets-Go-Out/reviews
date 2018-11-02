@@ -1,7 +1,7 @@
 /* eslint-env jest */
 
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render } from 'enzyme';
 import BarChart from '../client/BarChart.jsx';
 
 const fakeStarsCount = {
@@ -12,7 +12,13 @@ const fakeStarsCount = {
   1: 0.2,
 };
 
+const wrapper = render(<BarChart proportions={fakeStarsCount} />);
+
 it('renders five bars', () => {
-  const wrapper = shallow(<BarChart proportions={fakeStarsCount} />);
   expect(wrapper.find('.barContainer')).toHaveLength(5);
+});
+
+it('renders bars with widths corresponding to the values supplied as props', () => {
+  const firstWidth = fakeStarsCount[5] * 100;
+  expect(wrapper.find('.barForeground')[0]).toHaveProperty('attribs.style', `width:${firstWidth}%`);
 });

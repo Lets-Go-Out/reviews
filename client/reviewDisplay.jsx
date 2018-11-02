@@ -4,6 +4,7 @@ import React from 'react';
 import moment from 'moment';
 import Stars from './Stars.jsx';
 import PropTypes from 'prop-types';
+import API from './APICalls.js'
 
 
 class Review extends React.Component {
@@ -34,6 +35,18 @@ class Review extends React.Component {
     this.setState({ long });
   }
 
+  markHelpful() {
+    const { data } = this.props;
+    API.markHelpful(data.id, () => console.log('this review marked helpful'));
+  }
+
+  report() {
+    const { data } = this.props;
+    API.report(data.id, () => console.log('this review reported'));
+  }
+
+
+
   render() {
     const { data } = this.props;
     const { expanded, long } = this.state;
@@ -62,15 +75,15 @@ class Review extends React.Component {
         </div>
         {long
           ? (
-            <button type="button" onClick={() => this.readMoreHandler()}>
+            <button type="button" className="readMore" onClick={() => this.readMoreHandler()}>
               {expanded ? 'Read less' : 'Read more'}
             </button>
           )
           : null}
-        <button type="button">
+        <button type="button" onClick={() => this.report()}>
           report
         </button>
-        <button type="button">
+        <button type="button" onClick={() => this.markHelpful()}>
           helpful
         </button>
       </div>

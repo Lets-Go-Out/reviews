@@ -4,7 +4,10 @@ module.exports = {
   entry: './client/index.jsx',
   output: {
     path: path.join(__dirname, 'public'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
   },
   module: {
     rules: [
@@ -13,9 +16,9 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {presets: ['@babel/preset-react']}
-        }
-      }
-    ]
-  }
+          options: { presets: ['@babel/preset-react'] },
+        },
+      },
+    ],
+  },
 };

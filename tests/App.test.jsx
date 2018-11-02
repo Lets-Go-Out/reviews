@@ -51,6 +51,8 @@ it('filters reviews', () => {
   const instance = wrapper.instance();
   instance.checkBoxHandler('recent');
   expect(instance.state.filterParam).toBe('recent');
+  instance.checkBoxHandler('recent');
+  expect(instance.state.filterParam).toBe(null);
 });
 
 it('renders checkboxes for review filtering', () => {

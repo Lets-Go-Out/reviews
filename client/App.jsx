@@ -8,6 +8,7 @@ import Stars from './Stars.jsx';
 import BarChart from './BarChart.jsx';
 import APICalls from './APICalls.js';
 import Summary from './Summary.jsx';
+import Checkbox from './Checkbox.jsx';
 
 
 class Reviews extends React.Component {
@@ -19,7 +20,12 @@ class Reviews extends React.Component {
       sortBy: 'date',
       sortDir: -1,
       starsCount: {},
+      filterParam: null,
+      filtersChecked: {},
     };
+    this.filters = ['recent', 'lorem'];
+    const { filtersChecked } = this.state;
+    this.filters.forEach((param) => { filtersChecked[param] = false; });
   }
 
   componentDidMount() {
@@ -68,6 +74,27 @@ class Reviews extends React.Component {
     return sortDir * (a[sortBy] - b[sortBy]);
   }
 
+  selectFilter(param) {
+    const newFilters = {};
+    this.filters.forEach(param => newFilters[param] = false);
+    if (param !== null) {
+      Object.assign(newFilters, { [param]: true });
+    }
+    this.setState({
+      filtersChecked: newFilters,
+      filterParam: param,
+    });
+  }
+
+  checkBoxHandler(param) {
+    const { filterParam } = this.state;
+    if (param === filterParam) {
+      this.selectFilter(null);
+    } else {
+      this.selectFilter(param);
+    }
+  }
+
   changeSort(sortParam) {
     if (sortParam === 'date') {
       this.setState({
@@ -87,12 +114,24 @@ class Reviews extends React.Component {
     }
   }
 
+  filterReviews() {
+    const { filterParam, reviews } = this.state;
+    if (filterParam === 'recent') {
+      return reviews.filter(review => Date.now() - review.date > 2592000000);
+    }
+    if (typeof filterParam === 'string') {
+      return reviews.filter(review => review.text.includes(filterParam));
+    }
+    return reviews;
+  }
 
   render() {
-    const { info, starsCount } = this.state;
-    let { reviews } = this.state;
-    reviews.sort((a, b) => this.sortFunction(a, b));
-    reviews = reviews.map(review => <Review data={review} key={review.id} />);
+    const { info, starsCount, filtersChecked } = this.state;
+    const { reviews } = this.state;
+    let reviewsToDisplay = this.filterReviews();
+    console.log(reviewsToDisplay);
+    reviewsToDisplay.sort((a, b) => this.sortFunction(a, b));
+    reviewsToDisplay = reviewsToDisplay.map(review => <Review data={review} key={review.id} />);
     if (!reviews.length || !info.foodAvg) { return <div />; }
     return (
       <div>
@@ -101,8 +140,17 @@ class Reviews extends React.Component {
           starsCount={starsCount}
           changeSort={e => this.changeSort(e.target.value)}
         />
+        <div>
+          {this.filters.map(param => (
+            <Checkbox
+              label={param}
+              status={filtersChecked[param]}
+              onChange={() => this.checkBoxHandler(param)}
+            />
+          ))}
+        </div>
         <div className="reviews">
-          {reviews}
+          {reviewsToDisplay}
         </div>
       </div>
     );
@@ -117,5 +165,4 @@ Reviews.propTypes = {
   id: PropTypes.string,
 };
 
-ReactDOM.render(<Reviews id="25" />, document.getElementById('reviews'));
 export default Reviews;

@@ -56,6 +56,9 @@ class Review extends React.Component {
           {data.name}
         </div>
         <div>
+          {`${data.userNumReviews} reviews`}
+        </div>
+        <div>
           <Stars num={data.overall} />
         </div>
         <div>

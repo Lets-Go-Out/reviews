@@ -1,34 +1,65 @@
 import React from 'react';
-import Stars from './Stars.jsx';
-import BarChart from './BarChart.jsx';
+import Stars from './Stars';
+import BarChart from './BarChart';
 
 const Summary = ({ info, starsCount, changeSort }) => (
-  <div>
+  <div className="summaryContainer">
     <div>
-      <h2>
+      <div className="peopleAreSaying">
         {`What ${info.numReviews} People Are Saying`}
-      </h2>
+      </div>
     </div>
-    <div>
-      Overall Ratings and Reviews
+    <div className="statsContainer">
+      <div className="overallContainer">
+        <div className="mediumBold">
+          Overall Ratings and Reviews
+        </div>
+        <div>
+          Reviews can only be made by diners who have eaten at this restaurant
+        </div>
+        <div className="mainStars">
+          <Stars num={info.recent} />
+          <div>
+            {` ${info.recent.toFixed(2)} based on recent ratings`}
+          </div>
+        </div>
+        <div className="averages">
+          <div>
+            <div className="mediumBold">
+              {info.foodAvg.toFixed(2)}
+            </div>
+            <div>
+              Food
+            </div>
+          </div>
+          <div>
+            <div className="mediumBold">
+              {info.serviceAvg.toFixed(2)}
+            </div>
+            <div>
+              Service
+            </div>
+          </div>
+          <div>
+            <div className="mediumBold">
+              {info.ambienceAvg.toFixed(2)}
+            </div>
+            <div>
+              Ambience
+            </div>
+          </div>
+          <div>
+            <div className="mediumBold">
+              {info.valueAvg.toFixed(2)}
+            </div>
+            <div>
+               Value
+            </div>
+          </div>
+        </div>
+      </div>
+      <BarChart proportions={starsCount} />
     </div>
-    <div>
-      <Stars num={Math.round(info.recent)} />
-      {` ${info.recent.toFixed(2)} based on recent ratings`}
-    </div>
-    <div>
-      {`${info.foodAvg.toFixed(2)} Food`}
-    </div>
-    <div>
-      {`${info.serviceAvg.toFixed(2)} Service`}
-    </div>
-    <div>
-      {`${info.ambienceAvg.toFixed(2)} Ambience`}
-    </div>
-    <div>
-      {`${info.valueAvg.toFixed(2)} Value`}
-    </div>
-    <BarChart proportions={starsCount} />
     <div>
       Sort by
       <br />

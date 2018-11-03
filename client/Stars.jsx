@@ -1,15 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Stars = (props) => {
+const Stars = ({ num }) => {
+  const numStars = Math.round(num * 4) / 4;
   const stars = [];
   for (let i = 1; i <= 5; i += 1) {
-    stars.push(i <= props.num ? '\u2605' : '\u2606');
+    if (i <= numStars) {
+      stars.push(<div className="fullStar star" />);
+    } else if (i - numStars === 0.25) {
+      stars.push(<div className="threeQuarterStar star" />);
+    } else if (i - numStars === 0.5) {
+      stars.push(<div className="halfStar star" />);
+    } else if (i - numStars === 0.75) {
+      stars.push(<div className="quarterStar star" />);
+    } else {
+      stars.push(<div className="emptyStar star" />);
+    }
   }
   return (
-    <span>
-      {stars.join(' ')}
-    </span>);
+    <div className="stars">
+      {stars}
+    </div>);
 };
 
 Stars.defaultProps = {

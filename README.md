@@ -1,6 +1,6 @@
 # Project Name
 
-> Project description
+> This is a reviews component for an OpenTable-like restaurant. Displays review averages and individual reviews, allows filtering and sorting of reviews.
 
 ## Related Projects
 
@@ -24,16 +24,15 @@
 An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).
 
 - Node 6.13.0
-- etc
+- mySql
 
 ## Development
+
+- Developed in React, server in Express and db in mySql
 
 ### Installing Dependencies
 
 From within the root directory:
 
-```sh
-npm install -g webpack
-npm install
-```
+Make sure your installation of mySql hasthe global variable local_infile set to on. Then, run npm install and npm run seed from the root directory. Npm run build to run webpack, then npm start. Go to localhost:3005 to see a sample restaurant's reviews.
 

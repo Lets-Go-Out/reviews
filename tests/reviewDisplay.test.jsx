@@ -48,3 +48,14 @@ it('sends API requests when reviews are reported or marked helpful', () => {
   instance.markHelpful();
   expect(API.markHelpful).toBeCalled();
 });
+
+it('calls functions to report reviews or mark them helpful when the appropriate buttons are clicked', () => {
+  Review.prototype.markHelpful = jest.fn();
+  Review.prototype.report = jest.fn();
+  wrapper.find('.markHelpful').simulate('click');
+  expect(Review.prototype.markHelpful).toHaveBeenCalled();
+  wrapper.find('.report').simulate('click');
+  expect(Review.prototype.report).toHaveBeenCalled();
+});
+
+

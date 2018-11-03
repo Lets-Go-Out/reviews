@@ -1,13 +1,15 @@
 import React from 'react';
 
-const BarChart = (props) => {
+const BarChart = ({ proportions }) => {
   const bars = [];
   for (let i = 5; i > 0; i -= 1) {
-    const width = props.proportions[i] * 100 || 0;
+    const width = proportions[i] * 100 || 0;
     const style = { width: `${width}%` };
     bars.push(
-      <div  key={i} className="barContainer">
-        {i}
+      <div key={i} className="barContainer">
+        <div>
+          {i}
+        </div>
         <div className="barBackground">
           <div className="barForeground" style={style} />
         </div>
@@ -15,7 +17,7 @@ const BarChart = (props) => {
     );
   }
   return (
-    <div>
+    <div className="barChart">
       {bars}
     </div>
   );

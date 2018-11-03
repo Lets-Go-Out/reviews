@@ -4,8 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import React from 'react';
 import Enzyme from 'enzyme';
-import Reviews from '../client/App.jsx';
-import APICalls from '../client/APICalls.js';
+import Reviews from '../client/App';
+import APICalls from '../client/APICalls';
 
 const { shallow } = Enzyme;
 
@@ -59,10 +59,3 @@ it('renders checkboxes for review filtering', () => {
   const wrapper = shallow(<Reviews id={randoId} />);
   expect(wrapper.find('Checkbox').length).toBeGreaterThan(0);
 });
-
-// it('displays basic info about a restaurant\'s reviews', () => {
-//   const wrapper = mount(<Reviews id="3"/>);
-//   wrapper.update();
-//   expect(wrapper.text()).toContain('Ambience');
-//   wrapper.unmount();
-// });

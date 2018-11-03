@@ -102,11 +102,11 @@ class Review extends React.Component {
                   </button>
                 )
                 : null}
-              <button type="button" onClick={() => this.report()}>
+              <button type="button" className="report" onClick={() => this.report()}>
                 <span className="reportIcon" />
                 report
               </button>
-              <button type="button" onClick={() => this.markHelpful()}>
+              <button type="button" className="markHelpful" onClick={() => this.markHelpful()}>
                 <span className="helpfulIcon" />
                 helpful
               </button>

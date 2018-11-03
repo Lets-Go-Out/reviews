@@ -71,6 +71,7 @@ class Review extends React.Component {
               {data.userLocation}
             </div>
             <div>
+              <span className="speechBubble" />
               {`${data.userNumReviews} reviews`}
             </div>
           </div>
@@ -97,14 +98,16 @@ class Review extends React.Component {
               {long
                 ? (
                   <button type="button" className="readMore" onClick={() => this.readMoreHandler()}>
-                    {expanded ? 'Read less' : 'Read more'}
+                    {expanded ? '- Read less' : '+ Read more'}
                   </button>
                 )
                 : null}
               <button type="button" onClick={() => this.report()}>
+                <span className="reportIcon" />
                 report
               </button>
               <button type="button" onClick={() => this.markHelpful()}>
+                <span className="helpfulIcon" />
                 helpful
               </button>
             </div>

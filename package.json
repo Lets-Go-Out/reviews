@@ -10,7 +10,8 @@
   "scripts": {
     "seed": "./seedDb.sh",
     "test": "jest --coverage --",
-    "build": "webpack -w -d"
+    "build": "webpack -w -d",
+    "start": "node server/server.js"
   },
   "dependencies": {
     "airbnb-style": "^2.0.0",

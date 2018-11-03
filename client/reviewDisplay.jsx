@@ -62,7 +62,9 @@ class Review extends React.Component {
         <div className="reviewAndUser">
           <div className="userInfo">
             <div className={`userIcon ${color}`}>
-              {initials}
+              <div>
+                {initials}
+              </div>
             </div>
             <div>
               {data.name}

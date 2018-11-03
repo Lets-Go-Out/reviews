@@ -139,6 +139,9 @@ class Reviews extends React.Component {
           starsCount={starsCount}
           changeSort={e => this.changeSort(e.target.value)}
         />
+        <div className="mediumBold">
+            Filters
+        </div>
         <div className="filtersContainer">
           {this.filters.map(param => (
             <Checkbox

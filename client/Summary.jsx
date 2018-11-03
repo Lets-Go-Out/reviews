@@ -1,6 +1,6 @@
 import React from 'react';
-import Stars from './Stars.jsx';
-import BarChart from './BarChart.jsx';
+import Stars from './Stars';
+import BarChart from './BarChart';
 
 const Summary = ({ info, starsCount, changeSort }) => (
   <div className="summaryContainer">
@@ -19,7 +19,9 @@ const Summary = ({ info, starsCount, changeSort }) => (
         </div>
         <div className="mainStars">
           <Stars num={info.recent} />
-          {` ${info.recent.toFixed(2)} based on recent ratings`}
+          <div>
+            {` ${info.recent.toFixed(2)} based on recent ratings`}
+          </div>
         </div>
         <div className="averages">
           <div>

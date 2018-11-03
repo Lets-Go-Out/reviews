@@ -5,7 +5,6 @@ const Stars = ({ num }) => {
   const numStars = Math.round(num * 4) / 4;
   const stars = [];
   for (let i = 1; i <= 5; i += 1) {
-    // stars.push(i <= numStars ? <div className="fullStar">{'\u2605'}</div> : <div className="emptyStar">{'\u2605'}</div>);
     if (i <= numStars) {
       stars.push(<div className="fullStar star" />);
     } else if (i - numStars === 0.25) {

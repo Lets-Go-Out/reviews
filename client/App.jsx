@@ -134,7 +134,7 @@ class Reviews extends React.Component {
     reviewsToDisplay = reviewsToDisplay.map(review => <Review data={review} key={review.id} />);
     if (!reviews.length || !info.foodAvg) { return <div />; }
     return (
-      <div>
+      <div className={styles.reviewsComponent}>
         <Summary
           info={info}
           starsCount={starsCount}

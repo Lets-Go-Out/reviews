@@ -33,13 +33,17 @@
   font-weight: 500;
 }
 
+.checkboxWrapper {
+  height: 25px;
+}
+
 .reviewsComponent .checkbox {
   display: block;
   border: 1px solid #d8d9db;
   padding: 3px 8px 3px 3px;
   margin: 3px 12px 0px 0px;
   box-sizing: border-box;
-  height: 90%;
+  height: 100%;
 }
 
 .checkbox:hover, .checkbox.checked {

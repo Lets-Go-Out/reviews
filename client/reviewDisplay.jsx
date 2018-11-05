@@ -24,12 +24,17 @@ class Review extends React.Component {
     this.initials = names[0][0] + names[1][0];
     const colors = ['pink', 'blue', 'orange', 'violet'];
     this.color = colors[Math.floor(Math.random() * 4)];
+    this.checkButtonDisplay = () => this.checkReviewLength;
   }
 
 
   componentDidMount() {
     this.checkReviewLength();
-    window.addEventListener('resize', () => this.checkReviewLength());
+    window.addEventListener('resize', this.checkButtonDisplay);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.checkButtonDisplay);
   }
 
   readMoreHandler() {
@@ -38,6 +43,10 @@ class Review extends React.Component {
   }
 
   checkReviewLength() {
+    const { expanded } = this.state;
+    if (expanded) {
+      return;
+    }
     const long = this.review.current.clientHeight < this.text.current.clientHeight;
     this.setState({ long });
   }

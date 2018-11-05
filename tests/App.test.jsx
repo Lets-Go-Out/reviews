@@ -7,6 +7,7 @@ import Enzyme from 'enzyme';
 import Reviews from '../client/App';
 import APICalls from '../client/APICalls';
 
+
 const { shallow } = Enzyme;
 
 const fakeReviews = JSON.parse(fs.readFileSync(path.join(__dirname, '/sampleReviews.json')));

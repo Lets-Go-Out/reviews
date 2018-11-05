@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './style.css';
 
 const BarChart = ({ proportions }) => {
   const bars = [];
@@ -6,18 +7,18 @@ const BarChart = ({ proportions }) => {
     const width = proportions[i] * 100 || 0;
     const style = { width: `${width}%` };
     bars.push(
-      <div key={i} className="barContainer">
+      <div key={i} className={styles.barContainer}>
         <div>
           {i}
         </div>
-        <div className="barBackground">
-          <div className="barForeground" style={style} />
+        <div className={styles.barBackground}>
+          <div className={styles.barForeground} style={style} />
         </div>
       </div>,
     );
   }
   return (
-    <div className="barChart">
+    <div className={styles.barChart}>
       {bars}
     </div>
   );

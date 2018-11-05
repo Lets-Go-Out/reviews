@@ -6,6 +6,7 @@ import moment from 'moment';
 import Stars from './Stars';
 
 import API from './APICalls';
+import styles from './style.css';
 
 
 class Review extends React.Component {
@@ -58,10 +59,10 @@ class Review extends React.Component {
     const { initials, color } = this;
 
     return (
-      <div className="reviewContainer">
-        <div className="reviewAndUser">
-          <div className="userInfo">
-            <div className={`userIcon ${color}`}>
+      <div className={styles.reviewContainer}>
+        <div className={styles.reviewAndUser}>
+          <div className={styles.userInfo}>
+            <div className={`${styles.userIcon} ${styles[color]}`}>
               <div>
                 {initials}
               </div>
@@ -73,11 +74,11 @@ class Review extends React.Component {
               {data.userLocation}
             </div>
             <div>
-              <span className="speechBubble" />
+              <span className={styles.speechBubble} />
               {`${data.userNumReviews} reviews`}
             </div>
           </div>
-          <div className="review">
+          <div className={styles.review}>
             <div>
               <Stars num={data.overall} />
             </div>
@@ -87,7 +88,7 @@ class Review extends React.Component {
             <div>
               {`Overall ${data.overall} \u00B7 Food ${data.food} \u00B7 Service ${data.service} \u00B7 Ambience ${data.ambience}`}
             </div>
-            <div ref={this.review} className={expanded ? 'review' : 'truncated review'}>
+            <div ref={this.review} className={expanded ? styles.review : `${styles.truncated} ${styles.review}`}>
               <div ref={this.text}>
                 {data.text.split('\n\n').map(paragraph => (
                   <p>
@@ -96,20 +97,20 @@ class Review extends React.Component {
                 ))}
               </div>
             </div>
-            <div className="buttonRow">
+            <div className={styles.buttonRow}>
               {long
                 ? (
-                  <button type="button" className="readMore" onClick={() => this.readMoreHandler()}>
+                  <button type="button" className={styles.readMore} onClick={() => this.readMoreHandler()}>
                     {expanded ? '- Read less' : '+ Read more'}
                   </button>
                 )
                 : null}
-              <button type="button" className="report" onClick={() => this.report()}>
-                <span className="reportIcon" />
+              <button type="button" className={styles.report} onClick={() => this.report()}>
+                <span className={styles.reportIcon} />
                 report
               </button>
-              <button type="button" className="markHelpful" onClick={() => this.markHelpful()}>
-                <span className="helpfulIcon" />
+              <button type="button" className={styles.markHelpful} onClick={() => this.markHelpful()}>
+                <span className={styles.helpfulIcon} />
                 helpful
               </button>
             </div>

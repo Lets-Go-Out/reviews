@@ -42,7 +42,7 @@ button {
   height: 90%;
 }
 
-.checkbox:hover, .checkbox .checked {
+.checkbox:hover, .checkbox.checked {
   padding: 2px 7px 2px 2px;
   border: 2px solid #da3743;
 }

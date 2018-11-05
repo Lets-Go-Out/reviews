@@ -1,31 +1,32 @@
 import React from 'react';
 import Stars from './Stars';
 import BarChart from './BarChart';
+import styles from './style.css';
 
 const Summary = ({ info, starsCount, changeSort }) => (
-  <div className="summaryContainer">
+  <div className={styles.summaryContainer}>
     <div>
-      <div className="peopleAreSaying">
+      <div className={styles.peopleAreSaying}>
         {`What ${info.numReviews} People Are Saying`}
       </div>
     </div>
-    <div className="statsContainer">
-      <div className="overallContainer">
-        <div className="mediumBold">
+    <div className={styles.statsContainer}>
+      <div className={styles.overallContainer}>
+        <div className={styles.mediumBold}>
           Overall Ratings and Reviews
         </div>
         <div>
           Reviews can only be made by diners who have eaten at this restaurant
         </div>
-        <div className="mainStars">
+        <div className={styles.mainStars}>
           <Stars num={info.recent} />
           <div>
             {` ${info.recent.toFixed(2)} based on recent ratings`}
           </div>
         </div>
-        <div className="averages">
+        <div className={styles.averages}>
           <div>
-            <div className="mediumBold">
+            <div className={styles.mediumBold}>
               {info.foodAvg.toFixed(2)}
             </div>
             <div>
@@ -33,7 +34,7 @@ const Summary = ({ info, starsCount, changeSort }) => (
             </div>
           </div>
           <div>
-            <div className="mediumBold">
+            <div className={styles.mediumBold}>
               {info.serviceAvg.toFixed(2)}
             </div>
             <div>
@@ -41,7 +42,7 @@ const Summary = ({ info, starsCount, changeSort }) => (
             </div>
           </div>
           <div>
-            <div className="mediumBold">
+            <div className={styles.mediumBold}>
               {info.ambienceAvg.toFixed(2)}
             </div>
             <div>
@@ -49,7 +50,7 @@ const Summary = ({ info, starsCount, changeSort }) => (
             </div>
           </div>
           <div>
-            <div className="mediumBold">
+            <div className={styles.mediumBold}>
               {info.valueAvg.toFixed(2)}
             </div>
             <div>
@@ -63,7 +64,7 @@ const Summary = ({ info, starsCount, changeSort }) => (
     <div>
       Sort by
       <br />
-      <select className="sortSelector" onChange={changeSort}>
+      <select className={styles.sortSelector} onChange={changeSort}>
         <option value="date">
           Newest
         </option>

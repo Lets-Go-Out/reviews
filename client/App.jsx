@@ -6,6 +6,7 @@ import Review from './reviewDisplay';
 import APICalls from './APICalls';
 import Summary from './Summary';
 import Checkbox from './Checkbox';
+import styles from './style.css';
 
 
 class Reviews extends React.Component {
@@ -139,10 +140,10 @@ class Reviews extends React.Component {
           starsCount={starsCount}
           changeSort={e => this.changeSort(e.target.value)}
         />
-        <div className="mediumBold">
+        <div className={styles.mediumBold}>
             Filters
         </div>
-        <div className="filtersContainer">
+        <div className={styles.filtersContainer}>
           {this.filters.map(param => (
             <Checkbox
               key={param}
@@ -152,7 +153,7 @@ class Reviews extends React.Component {
             />
           ))}
         </div>
-        <div className="reviews">
+        <div className={styles.reviews}>
           {reviewsToDisplay}
         </div>
       </div>

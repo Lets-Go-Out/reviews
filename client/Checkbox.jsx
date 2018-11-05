@@ -1,6 +1,7 @@
 /* eslint-env commonjs, browser */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import styles from './style.css';
 
 const Checkbox = ({ label, onChange, status }) => (
@@ -11,5 +12,11 @@ const Checkbox = ({ label, onChange, status }) => (
     </button>
   </div>
 );
+
+Checkbox.propTypes = {
+  label: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  status: PropTypes.bool.isRequired,
+};
 
 export default Checkbox;

@@ -1,4 +1,4 @@
-body {
+.reviewsComponent {
   font-family: BrandonText,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
   background-color: #FFFFFF;
   color: #2d333f;
@@ -6,7 +6,7 @@ body {
   margin-left: 60px;
 }
 
-button {
+.reviewsComponent button {
   display: block;
   border: none;
   background: inherit;
@@ -33,7 +33,7 @@ button {
   font-weight: 500;
 }
 
-.checkbox {
+.reviewsComponent .checkbox {
   display: block;
   border: 1px solid #d8d9db;
   padding: 3px 8px 3px 3px;
@@ -42,7 +42,7 @@ button {
   height: 90%;
 }
 
-.checkbox:hover, .checkbox .checked {
+.checkbox:hover, .checkbox.checked {
   padding: 2px 7px 2px 2px;
   border: 2px solid #da3743;
 }
@@ -170,8 +170,13 @@ button {
 .overallContainer {
   display: flex;
   flex-direction: column;
-  margin-top: 2%;
+  margin-top: 1%;
+  justify-content: flex-start;
 
+}
+
+.overallContainer > div {
+  margin-bottom: 7px;
 }
 
 

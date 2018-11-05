@@ -7,7 +7,7 @@ module.exports = {
     filename: 'bundle.js',
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.css'],
   },
   module: {
     rules: [
@@ -18,6 +18,16 @@ module.exports = {
           loader: 'babel-loader',
           options: { presets: ['@babel/preset-react'] },
         },
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', {
+          loader: 'css-loader',
+          options: {
+            sourceMap: true,
+            modules: true,
+          },
+        }],
       },
     ],
   },

@@ -170,8 +170,13 @@ button {
 .overallContainer {
   display: flex;
   flex-direction: column;
-  margin-top: 2%;
+  margin-top: 1%;
+  justify-content: flex-start;
 
+}
+
+.overallContainer > div {
+  margin-bottom: 7px;
 }
 
 

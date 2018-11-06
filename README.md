@@ -17,7 +17,7 @@
 
 ## Usage
 
-> Some usage instructions
+> Copy the example_config .js file and rename to config.js, with your mySql password and username.
 
 ## Requirements
 

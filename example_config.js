@@ -1,5 +1,5 @@
 const configVars = {
-  dbUsername: '',
+  dbUsername: 'root',
   dbPassword: '',
   port: 3005,
 };

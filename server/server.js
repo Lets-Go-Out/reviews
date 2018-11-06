@@ -9,10 +9,8 @@ app.use(cors());
 app.use(express.static('./public'));
 
 app.get('/restaurants/:restaurantid/reviewsummary', (req, res) => {
-  // console.log(req);
   db.getBasicInfo(req.params.restaurantid, (err, data) => {
     if (err) { return res.sendStatus(500); }
-    // console.log(data)
     return res.status(200).json(data[0]);
   });
 });

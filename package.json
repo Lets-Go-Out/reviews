@@ -16,6 +16,7 @@
   "dependencies": {
     "airbnb-style": "^2.0.0",
     "babel-loader": "^8.0.4",
+    "cors": "^2.8.5",
     "eslint-config-airbnb-bundle": "^2.0.4",
     "express": "^4.16.4",
     "moment": "^2.22.2",
@@ -44,6 +45,8 @@
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>tests/setupTests.js",
-    "moduleNameMapper": {"\\.(css)$": "identity-obj-proxy"}
+    "moduleNameMapper": {
+      "\\.(css)$": "identity-obj-proxy"
+    }
   }
 }

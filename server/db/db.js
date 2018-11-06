@@ -1,9 +1,10 @@
 const mysql = require('mysql');
+const configVars = require('../../config.js');
 
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: '',
+  user: configVars.dbUsername,
+  password: configVars.dbPassword,
   database: 'droptable',
 });
 

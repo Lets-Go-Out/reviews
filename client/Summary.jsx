@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Stars from './Stars';
 import BarChart from './BarChart';
 import styles from './style.css';
@@ -78,6 +79,25 @@ const Summary = ({ info, starsCount, changeSort }) => (
     </div>
   </div>
 );
+
+Summary.propTypes = {
+  info: PropTypes.shape({
+    numReviews: PropTypes.number,
+    recent: PropTypes.number,
+    foodAvg: PropTypes.number,
+    serviceAvg: PropTypes.number,
+    valueAvg: PropTypes.number,
+    ambienceAvg: PropTypes.number,
+  }).isRequired,
+  starsCount: PropTypes.shape({
+    5: PropTypes.number,
+    4: PropTypes.number,
+    3: PropTypes.number,
+    2: PropTypes.number,
+    1: PropTypes.number,
+  }).isRequired,
+  changeSort: PropTypes.func.isRequired,
+};
 
 
 export default Summary;

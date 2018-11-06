@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-import APICalls from '../client/APICalls.js';
+import APICalls from '../client/APICalls';
 
 global.fetch = jest.fn();
 

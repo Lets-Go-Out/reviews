@@ -121,12 +121,17 @@ class Review extends React.Component {
   }
 }
 
-Review.defaultProps = {
-  data: {},
-};
 
 Review.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.shape({
+    overall: PropTypes.number.isRequired,
+    food: PropTypes.number.isRequired,
+    service: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+    ambience: PropTypes.number.isRequired,
+    text: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default Review;

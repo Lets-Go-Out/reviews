@@ -24,7 +24,7 @@ class Review extends React.Component {
     this.initials = names[0][0] + names[1][0];
     const colors = ['pink', 'blue', 'orange', 'violet'];
     this.color = colors[Math.floor(Math.random() * 4)];
-    this.checkButtonDisplay = () => this.checkReviewLength;
+    this.checkButtonDisplay = () => this.checkReviewLength();
   }
 
 

@@ -10,7 +10,10 @@ app.use(express.static('./public'));
 
 app.get('/restaurants/:restaurantid/reviewsummary', (req, res) => {
   db.getBasicInfo(req.params.restaurantid, (err, data) => {
-    if (err) { return res.sendStatus(500); }
+    if (err) {
+      console.log(err);
+      return res.sendStatus(500);
+    }
     return res.status(200).json(data[0]);
   });
 });

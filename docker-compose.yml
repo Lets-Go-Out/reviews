@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  reviews:
+    build: service/
+    depends_on: 
+      - 'reviewsdb'
+    ports: 
+      - '3005:3005'
+
+  reviewsdb:
+    build: dbconfig/
+
+    ports:
+      - '3306:3306'

@@ -2,7 +2,7 @@
 
 const API = {
   getReviews: (id, cb) => {
-    fetch(`http://localhost:3005/restaurants/${id}/reviews`)
+    fetch(`/restaurants/${id}/reviews`)
       .then((response) => {
         if (response.status === 500) { throw new Error('500 internal server error'); }
         return response.json();
@@ -12,7 +12,7 @@ const API = {
   },
 
   getBasicInfo: (id, cb) => {
-    fetch(`http://localhost:3005/restaurants/${id}/reviewsummary`)
+    fetch(`/restaurants/${id}/reviewsummary`)
       .then((response) => {
         if (response.status === 500) { throw new Error('500 internal server error'); }
         return response.json();
@@ -22,7 +22,7 @@ const API = {
   },
 
   markHelpful: (id, cb) => {
-    fetch(`http://localhost:3005/reviews/${id}/markhelpful`, {
+    fetch(`/reviews/${id}/markhelpful`, {
       method: 'PATCH',
     })
       .then((response) => {
@@ -33,7 +33,7 @@ const API = {
   },
 
   report: (id, cb) => {
-    fetch(`http://localhost:3005/reviews/${id}/report`, {
+    fetch(`/reviews/${id}/report`, {
       method: 'PATCH',
     })
       .then((response) => {

@@ -1,8 +1,8 @@
+ARG MYSQL_ROOT_PASSWORD
+
 FROM mysql:latest
 
 COPY . /docker-entrypoint-initdb.d
-
-ENV MYSQL_ROOT_PASSWORD=abc123
 
 EXPOSE 3306
 

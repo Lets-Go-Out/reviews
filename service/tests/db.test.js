@@ -2,7 +2,7 @@
 
 const db = require('../server/db/db.js');
 
-afterAll(() => db.closeConnection(() => console.log('connection closed')));
+// afterAll(() => db.closeConnection(() => console.log('connection closed')));
 
 test('it gets basic data about a restaurant', (done) => {
   const testCb = (err, data) => {

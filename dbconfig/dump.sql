@@ -18,6 +18,10 @@
 --
 -- Table structure for table `restaurants`
 --
+DROP DATABASE IF EXISTS droptable;
+
+CREATE DATABASE droptable;
+
 USE droptable;
 
 DROP TABLE IF EXISTS `restaurants`;

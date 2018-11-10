@@ -12,22 +12,21 @@
     "test": "jest --coverage --",
     "build": "webpack -w -d",
     "compile": "webpack",
-    "start": "sleep 25 && node server/server.js"
+    "start": "node server/server.js"
   },
   "dependencies": {
-    "airbnb-style": "^2.0.0",
-    "babel-loader": "^8.0.4",
+    "compression": "^1.7.3",
     "cors": "^2.8.5",
-    "eslint-config-airbnb-bundle": "^2.0.4",
     "express": "^4.16.4",
     "moment": "^2.22.2",
     "mysql": "^2.16.0",
     "prop-types": "^15.6.2",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
     "save-dev": "^2.0.0"
   },
   "devDependencies": {
+    "babel-loader": "^8.0.4",
+    "airbnb-style": "^2.0.0",
+    "eslint-config-airbnb-bundle": "^2.0.4",
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
@@ -42,6 +41,8 @@
     "jest": "^23.6.0",
     "style-loader": "^0.23.1",
     "webpack": "^4.23.1",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
     "webpack-cli": "^3.1.2"
   },
   "jest": {

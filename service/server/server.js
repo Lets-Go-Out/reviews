@@ -1,10 +1,16 @@
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
+
 const db = require('./db/db.js');
 
 const app = express();
 
 app.use(cors());
+app.use(compression());
+
+
+app.use('/restaurants/:restaurantid', express.static('./public'));
 
 app.use(express.static('./public'));
 

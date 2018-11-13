@@ -1,16 +1,25 @@
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
+
 const db = require('./db/db.js');
 
 const app = express();
 
 app.use(cors());
+app.use(compression());
+
+
+app.use('/restaurants/:restaurantid', express.static('./public'));
 
 app.use(express.static('./public'));
 
 app.get('/restaurants/:restaurantid/reviewsummary', (req, res) => {
   db.getBasicInfo(req.params.restaurantid, (err, data) => {
-    if (err) { return res.sendStatus(500); }
+    if (err) {
+      console.log(err);
+      return res.sendStatus(500);
+    }
     return res.status(200).json(data[0]);
   });
 });

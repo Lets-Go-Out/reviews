@@ -1,0 +1,9 @@
+ARG MYSQL_ROOT_PASSWORD
+
+FROM mysql:latest
+
+COPY . /docker-entrypoint-initdb.d
+
+EXPOSE 3306
+
+CMD ["--default-authentication-plugin=mysql_native_password"]

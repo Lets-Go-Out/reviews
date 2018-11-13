@@ -1,7 +1,6 @@
 /* eslint-env commonjs, browser */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import Review from './reviewDisplay';
 import APICalls from './APICalls';
 import Summary from './Summary';
@@ -11,8 +10,12 @@ import styles from './style.css';
 
 class Reviews extends React.Component {
   constructor(props) {
+    const { pathname } = window.location;
+    const pathChunks = pathname.split('/');
+    const id = pathChunks[2] || '25';
     super(props);
     this.state = {
+      id,
       reviews: [],
       info: {},
       sortBy: 'date',
@@ -27,17 +30,21 @@ class Reviews extends React.Component {
   }
 
   componentDidMount() {
+    const { pathname } = window.location;
+    const pathChunks = pathname.split('/');
+    const id = pathChunks[2] || '25';
+    this.setState({ id });
     this.getBasicInfo();
     this.getReviews();
   }
 
   getBasicInfo() {
-    const { id } = this.props;
+    const { id } = this.state;
     APICalls.getBasicInfo(id, info => this.setState({ info }));
   }
 
   getReviews() {
-    const { id } = this.props;
+    const { id } = this.state;
     APICalls.getReviews(id, reviews => this.shapeReviews(reviews));
   }
 
@@ -161,12 +168,5 @@ class Reviews extends React.Component {
   }
 }
 
-Reviews.defaultProps = {
-  id: '1',
-};
-
-Reviews.propTypes = {
-  id: PropTypes.string,
-};
 
 export default Reviews;

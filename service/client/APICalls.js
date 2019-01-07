@@ -2,7 +2,7 @@
 
 const API = {
   getReviews: (id, cb) => {
-    fetch(`http://ec2-3-16-56-113.us-east-2.compute.amazonaws.com/restaurants/${id}/reviews`)
+    fetch(`/restaurants/${id}/reviews`)
       .then((response) => {
         if (response.status === 500) { throw new Error('500 internal server error'); }
         return response.json();
@@ -12,7 +12,7 @@ const API = {
   },
 
   getBasicInfo: (id, cb) => {
-    fetch(`http://ec2-3-16-56-113.us-east-2.compute.amazonaws.com/restaurants/${id}/reviewsummary`)
+    fetch(`/restaurants/${id}/reviewsummary`)
       .then((response) => {
         if (response.status === 500) { throw new Error('500 internal server error'); }
         return response.json();
@@ -22,7 +22,7 @@ const API = {
   },
 
   markHelpful: (id, cb) => {
-    fetch(`http://ec2-3-16-56-113.us-east-2.compute.amazonaws.com/reviews/${id}/markhelpful`, {
+    fetch(`/reviews/${id}/markhelpful`, {
       method: 'PATCH',
     })
       .then((response) => {
@@ -33,7 +33,7 @@ const API = {
   },
 
   report: (id, cb) => {
-    fetch(`http://ec2-3-16-56-113.us-east-2.compute.amazonaws.com/reviews/${id}/report`, {
+    fetch(`/reviews/${id}/report`, {
       method: 'PATCH',
     })
       .then((response) => {

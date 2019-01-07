@@ -20,10 +20,18 @@ const Summary = ({ info, starsCount, changeSort }) => (
           Reviews can only be made by diners who have eaten at this restaurant
         </div>
         <div className={styles.mainStars}>
-          <Stars num={info.recent} />
-          <div>
-            {` ${info.recent.toFixed(2)} based on recent ratings`}
-          </div>
+          {
+            info.recent
+              ? (
+                <div>
+                  <Stars num={info.recent} />
+                  <div>
+                    {` ${info.recent.toFixed(2)} based on recent ratings`}
+                  </div>
+                </div>
+              )
+              : 'no recent ratings'
+          }
         </div>
         <div className={styles.averages}>
           <div>

@@ -55,7 +55,11 @@ class Reviews extends React.Component {
     recent = recent.map(review => review.overall);
     const { info } = this.state;
     const sum = (a, b) => a + b;
-    const newInfo = Object.assign({}, info, { recent: recent.reduce(sum) / recent.length });
+    const newInfo = Object.assign({}, info, {
+      recent: recent.length
+        ? recent.reduce(sum) / recent.length
+        : null,
+    });
     this.setState({ info: newInfo });
     this.setState({ reviews });
     this.countReviews();

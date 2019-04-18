@@ -8,7 +8,7 @@
     "node": ">=6.13.0"
   },
   "scripts": {
-    "seed": "./seedDb.sh",
+    "seed-pg": "pgSeed.js",
     "test": "jest --coverage --",
     "build": "webpack -w -d",
     "compile": "webpack",
@@ -20,6 +20,7 @@
     "express": "^4.16.4",
     "moment": "^2.22.2",
     "mysql": "^2.16.0",
+    "pg": "^7.10.0",
     "prop-types": "^15.6.2",
     "save-dev": "^2.0.0"
   },

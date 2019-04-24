@@ -156,47 +156,48 @@ const toCSV = (obj, arrayOfColNames) => {
       row.push(`'${obj[colName]}'`);
     }
     return row.join("#");
-  };
+  });
+};
 
-  let restStream = fs.createWriteStream("./fakeNoSQLRestaurantsStringsTest.csv");
-  // let userStream = fs.createWriteStream("./fakeNoSQLUsers2.csv");
+let restStream = fs.createWriteStream("./fakeNoSQLRestaurantsStringsTest.csv");
+// let userStream = fs.createWriteStream("./fakeNoSQLUsers2.csv");
 
-  const LIMIT = 10000000;
-  let i = 1;
-  let reviewCount = 0;
-  restStream.write(restaurantCols.slice().join("#"));
-  // userStream.write(userCols.slice().join("#"));
+const LIMIT = 10000000;
+let i = 1;
+let reviewCount = 0;
+restStream.write(restaurantCols.slice().join("#"));
+// userStream.write(userCols.slice().join("#"));
 
-  function writing(callback) {
-    let restOK = true,
-      userOK = true;
-    do {
-      let fakeReviews = [];
-      let rest = createFakeRestaurant(i);
-      addReviews(rest, fakeReviews, reviewCount);
-      Object.assign(rest, { reviews: fakeReviews });
-      // let user = fakeUserGenerator(i);
-      i++;
-      reviewCount += fakeReviews.length;
-      if (i % 1000 === 0) console.log(i);
-      if (i % 10000 === 0) {
-        console.clear();
-      }
-      if (i === LIMIT) {
-        restStream.write(toCSV(rest, restaurantCols), "utf8", callback);
-        // userStream.write(toCSV(user, userCols), "utf8", callback);
-      } else {
-        restOK = restStream.write(toCSV(rest, restaurantCols));
-        // userOK = userStream.write(toCSV(user, userCols));
-      }
-    } while (i <= LIMIT && restOK && userOK);
-    if (i < LIMIT) {
-      if (!restOK) {
-        restStream.once("drain", writing);
-      } else {
-        // userStream.once("drain", writing);
-      }
+function writing(callback) {
+  let restOK = true,
+    userOK = true;
+  do {
+    let fakeReviews = [];
+    let rest = createFakeRestaurant(i);
+    addReviews(rest, fakeReviews, reviewCount);
+    Object.assign(rest, { reviews: fakeReviews });
+    // let user = fakeUserGenerator(i);
+    i++;
+    reviewCount += fakeReviews.length;
+    if (i % 1000 === 0) console.log(i);
+    if (i % 10000 === 0) {
+      console.clear();
+    }
+    if (i === LIMIT) {
+      restStream.write(toCSV(rest, restaurantCols), "utf8", callback);
+      // userStream.write(toCSV(user, userCols), "utf8", callback);
+    } else {
+      restOK = restStream.write(toCSV(rest, restaurantCols));
+      // userOK = userStream.write(toCSV(user, userCols));
+    }
+  } while (i <= LIMIT && restOK && userOK);
+  if (i < LIMIT) {
+    if (!restOK) {
+      restStream.once("drain", writing);
+    } else {
+      // userStream.once("drain", writing);
     }
   }
-  writing();
+}
+writing();
 

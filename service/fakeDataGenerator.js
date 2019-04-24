@@ -111,7 +111,7 @@ const addReviews = (rest, fakeReviews) => {
   }
 };
 
-const toCSV = (obj, arrayOfColNames, isIdprovided = true) => {
+const toCSV = (obj, arrayOfColNames) => {
   const row = [];
   arrayOfColNames.forEach((colName, i) => {
     if (i === 0) {
@@ -170,9 +170,9 @@ const reviewCols = [
   "timesMarkedHelpful"
 ];
 
-let restStream = fs.createWriteStream("./fakeRestaurants2.csv");
-let reviewStream = fs.createWriteStream("./fakeReviews2.csv");
-// let userStream = fs.createWriteStream("./fakeUsers.csv");
+let restStream = fs.createWriteStream("C:/Windows/Temp/PostgreSQL/fakeRestaurants2.csv");
+let reviewStream = fs.createWriteStream("C:/Windows/Temp/PostgreSQL/fakeReviews2.csv");
+let userStream = fs.createWriteStream("C:/Windows/Temp/PostgreSQL/fakeUsers.csv");
 
 const LIMIT = 10000000;
 let i = 1;
@@ -181,7 +181,7 @@ restStream.write(restaurantCols.slice().join(","));
 let appendedRevCols = reviewCols.slice();
 appendedRevCols.unshift("id");
 reviewStream.write(appendedRevCols.join(","));
-// userStream.write(userCols.slice().join(","));
+userStream.write(userCols.slice().join(","));
 
 function writing(callback) {
   let restOK = true,
@@ -191,7 +191,7 @@ function writing(callback) {
     let fakeReviews = [];
     let rest = createFakeRestaurant(i);
     addReviews(rest, fakeReviews);
-    // let user = fakeUserGenerator(i);
+    let user = fakeUserGenerator(i);
     i++;
     console.log(i);
     if (i % 10000 === 0) {
@@ -199,7 +199,7 @@ function writing(callback) {
     }
     if (i === LIMIT) {
       restStream.write(toCSV(rest, restaurantCols), "utf8", callback);
-      // userStream.write(toCSV(user, userCols), "utf8", callback);
+      userStream.write(toCSV(user, userCols), "utf8", callback);
       reviewStream.write(
         reviewsToCSV(fakeReviews, reviewCols),
         "utf8",
@@ -207,7 +207,7 @@ function writing(callback) {
       );
     } else {
       restOK = restStream.write(toCSV(rest, restaurantCols));
-      // userOK = userStream.write(toCSV(user, userCols));
+      userOK = userStream.write(toCSV(user, userCols));
       reviewOK = reviewStream.write(reviewsToCSV(fakeReviews, reviewCols));
     }
   } while (i <= LIMIT && restOK && reviewOK && userOK);
@@ -217,7 +217,7 @@ function writing(callback) {
     } else if (!restOK) {
       restStream.once("drain", writing);
     } else {
-      // userStream.once("drain", writing);
+      userStream.once("drain", writing);
     }
   }
 }

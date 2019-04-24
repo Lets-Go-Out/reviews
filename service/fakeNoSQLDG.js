@@ -1,10 +1,11 @@
 const faker = require("faker");
 const fs = require("fs");
+const Uuid = require('cassandra-driver').types.Uuid;
 
 faker.seed(105);
 
 const createFakeRestaurant = i => {
-  const fakeRestaurant = { id: i };
+  const fakeRestaurant = { id: Uuid.random().toString() };
   const fakeWords = [];
   const length = faker.random.number() % 3;
 
@@ -130,72 +131,72 @@ const toCSV = (obj, arrayOfColNames) => {
   const row = [];
   arrayOfColNames.forEach((colName, i) => {
     if (i === 0) {
-      row.push(`\n"${obj[colName]}"`);
+      row.push(`\n'${obj[colName]}'`);
     } else if (colName === "reviews") {
-      let str = "[";
-      obj[colName].forEach(reviewObj => {
-        str += '{';
-        for (let prop in reviewObj) {
-          if (prop === 'text') {
-            str += `${prop}: ${JSON.stringify(reviewObj[prop])}, `;
-          } else {
-            str += `${prop}: ${reviewObj[prop]}, `;
-          }
-        }
-        str = str.slice(0, str.length - 2);
-        str += '}, ';
-      })
-      str = str.slice(0, str.length - 2);
-      str += "]";
-      row.push(str);
+      // let str = "[";
+      // obj[colName].forEach(reviewObj => {
+      //   str += '{';
+      //   for (let prop in reviewObj) {
+      //     if (prop === 'text') {
+      //       str += `${prop}: ${JSON.stringify(reviewObj[prop])}, `;
+      //     } else {
+      //       str += `${prop}: ${reviewObj[prop]}, `;
+      //     }
+      //   }
+      //   str = str.slice(0, str.length - 2);
+      //   str += '}, ';
+      // })
+      // str = str.slice(0, str.length - 2);
+      // str += "]";
+      let str = JSON.stringify(obj[colName]);
+      row.push(`'${str}'`);
     } else if (colName === "name") {
-      row.push(`"${obj[colName]}"`);
+      row.push(`'${obj[colName]}'`);
     } else {
-      row.push(`"${obj[colName]}"`);
+      row.push(`'${obj[colName]}'`);
     }
-  });
-  return row.join("#");
-};
+    return row.join("#");
+  };
 
-let restStream = fs.createWriteStream("./fakeNoSQLRestaurants.csv");
-// let userStream = fs.createWriteStream("./fakeNoSQLUsers2.csv");
+  let restStream = fs.createWriteStream("./fakeNoSQLRestaurantsStringsTest.csv");
+  // let userStream = fs.createWriteStream("./fakeNoSQLUsers2.csv");
 
-const LIMIT = 10000000;
-let i = 1;
-let reviewCount = 0;
-restStream.write(restaurantCols.slice().join("#"));
-// userStream.write(userCols.slice().join("#"));
+  const LIMIT = 10000000;
+  let i = 1;
+  let reviewCount = 0;
+  restStream.write(restaurantCols.slice().join("#"));
+  // userStream.write(userCols.slice().join("#"));
 
-function writing(callback) {
-  let restOK = true,
-    userOK = true;
-  do {
-    let fakeReviews = [];
-    let rest = createFakeRestaurant(i);
-    addReviews(rest, fakeReviews, reviewCount);
-    Object.assign(rest, { reviews: fakeReviews });
-    // let user = fakeUserGenerator(i);
-    i++;
-    reviewCount += fakeReviews.length;
-    if (i % 1000 === 0) console.log(i);
-    if (i % 10000 === 0) {
-      console.clear();
-    }
-    if (i === LIMIT) {
-      restStream.write(toCSV(rest, restaurantCols), "utf8", callback);
-      // userStream.write(toCSV(user, userCols), "utf8", callback);
-    } else {
-      restOK = restStream.write(toCSV(rest, restaurantCols));
-      // userOK = userStream.write(toCSV(user, userCols));
-    }
-  } while (i <= LIMIT && restOK && userOK);
-  if (i < LIMIT) {
-    if (!restOK) {
-      restStream.once("drain", writing);
-    } else {
-      // userStream.once("drain", writing);
+  function writing(callback) {
+    let restOK = true,
+      userOK = true;
+    do {
+      let fakeReviews = [];
+      let rest = createFakeRestaurant(i);
+      addReviews(rest, fakeReviews, reviewCount);
+      Object.assign(rest, { reviews: fakeReviews });
+      // let user = fakeUserGenerator(i);
+      i++;
+      reviewCount += fakeReviews.length;
+      if (i % 1000 === 0) console.log(i);
+      if (i % 10000 === 0) {
+        console.clear();
+      }
+      if (i === LIMIT) {
+        restStream.write(toCSV(rest, restaurantCols), "utf8", callback);
+        // userStream.write(toCSV(user, userCols), "utf8", callback);
+      } else {
+        restOK = restStream.write(toCSV(rest, restaurantCols));
+        // userOK = userStream.write(toCSV(user, userCols));
+      }
+    } while (i <= LIMIT && restOK && userOK);
+    if (i < LIMIT) {
+      if (!restOK) {
+        restStream.once("drain", writing);
+      } else {
+        // userStream.once("drain", writing);
+      }
     }
   }
-}
-writing();
+  writing();
 

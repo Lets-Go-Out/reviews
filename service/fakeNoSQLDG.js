@@ -18,7 +18,7 @@ const createFakeRestaurant = i => {
 };
 
 const fakeUserGenerator = i => {
-  const fakeUser = { id: i };
+  const fakeUser = { id: Uuid.random().toString() };
   fakeUser.name = faker.name.findName();
   fakeUser.numReviews = faker.random.number(50) + 10;
   fakeUser.location = faker.address.city();
@@ -155,18 +155,18 @@ const toCSV = (obj, arrayOfColNames) => {
     } else {
       row.push(`'${obj[colName]}'`);
     }
-    return row.join("#");
   });
+  return row.join("#");
 };
 
-let restStream = fs.createWriteStream("./fakeNoSQLRestaurantsStringsTest.csv");
-// let userStream = fs.createWriteStream("./fakeNoSQLUsers2.csv");
+let restStream = fs.createWriteStream("./restTest.csv");
+let userStream = fs.createWriteStream("./usersTest.csv");
 
-const LIMIT = 10000000;
+const LIMIT = 100;
 let i = 1;
 let reviewCount = 0;
 restStream.write(restaurantCols.slice().join("#"));
-// userStream.write(userCols.slice().join("#"));
+userStream.write(userCols.slice().join("#"));
 
 function writing(callback) {
   let restOK = true,
@@ -176,7 +176,7 @@ function writing(callback) {
     let rest = createFakeRestaurant(i);
     addReviews(rest, fakeReviews, reviewCount);
     Object.assign(rest, { reviews: fakeReviews });
-    // let user = fakeUserGenerator(i);
+    let user = fakeUserGenerator(i);
     i++;
     reviewCount += fakeReviews.length;
     if (i % 1000 === 0) console.log(i);
@@ -185,17 +185,17 @@ function writing(callback) {
     }
     if (i === LIMIT) {
       restStream.write(toCSV(rest, restaurantCols), "utf8", callback);
-      // userStream.write(toCSV(user, userCols), "utf8", callback);
+      userStream.write(toCSV(user, userCols), "utf8", callback);
     } else {
       restOK = restStream.write(toCSV(rest, restaurantCols));
-      // userOK = userStream.write(toCSV(user, userCols));
+      userOK = userStream.write(toCSV(user, userCols));
     }
   } while (i <= LIMIT && restOK && userOK);
   if (i < LIMIT) {
     if (!restOK) {
       restStream.once("drain", writing);
     } else {
-      // userStream.once("drain", writing);
+      userStream.once("drain", writing);
     }
   }
 }

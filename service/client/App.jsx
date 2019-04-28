@@ -10,10 +10,10 @@ import styles from './style.css';
 
 class Reviews extends React.Component {
   constructor(props) {
+    super(props);
     const { pathname } = window.location;
     const pathChunks = pathname.split('/');
-    const id = pathChunks[2] || '25';
-    super(props);
+    const id = pathChunks[2] || Math.ceil(Math.random() * 10000000).toString();
     this.state = {
       id,
       reviews: [],
@@ -32,27 +32,54 @@ class Reviews extends React.Component {
   componentDidMount() {
     const { pathname } = window.location;
     const pathChunks = pathname.split('/');
-    const id = pathChunks[2] || '25';
+    const id = pathChunks[2] || Math.ceil(Math.random() * 10000000).toString();
     this.setState({ id });
-    this.getBasicInfo();
+    // this.getBasicInfo();
     this.getReviews();
   }
 
-  getBasicInfo() {
-    const { id } = this.state;
-    APICalls.getBasicInfo(id, info => this.setState({ info }));
-  }
+  // getBasicInfo() {
+  //   const { id } = this.state;
+  //   APICalls.getBasicInfo(id, info => this.setState({ info }));
+  // }
 
   getReviews() {
     const { id } = this.state;
-    APICalls.getReviews(id, reviews => this.shapeReviews(reviews));
+    APICalls.getReviews(id, reviews => {
+      const {
+        restaurantId,
+        restaurantName,
+        ambienceAvg,
+        foodAvg,
+        overallAvg,
+        serviceAvg,
+        valueAvg,
+        wyrAvg,
+        reviewIds,
+        numReviews
+      } = reviews[0];
+      this.setState({
+        info: {
+          restaurantId,
+          restaurantName,
+          ambienceAvg,
+          foodAvg,
+          overallAvg,
+          serviceAvg,
+          valueAvg,
+          wyrAvg,
+          reviewIds,
+          numReviews
+        }
+      }, this.shapeReviews(reviews))
+    });
   }
 
   shapeReviews(reviews) {
     reviews.forEach(review => Object.assign(review, { date: new Date(review.date) }));
     const today = new Date();
     let recent = reviews.filter(review => today - review.date <= 7889400000);
-    recent = recent.map(review => review.overall);
+    recent = recent.map(review => review.overallAvg);
     const { info } = this.state;
     const sum = (a, b) => a + b;
     const newInfo = Object.assign({}, info, {
@@ -70,7 +97,7 @@ class Reviews extends React.Component {
     const starsCount = {};
     const { reviews } = this.state;
     reviews.forEach((review) => {
-      const rating = review.overall;
+      const rating = review.overallRating;
       starsCount[rating] = starsCount[rating] + 1 || 1;
     });
     const keys = Object.keys(starsCount);
@@ -138,8 +165,8 @@ class Reviews extends React.Component {
   }
 
   render() {
-    const { info, starsCount, filtersChecked } = this.state;
-    const { reviews } = this.state;
+    const { info, starsCount, filtersChecked, reviews } = this.state;
+    // const { reviews } = this.state;
     let reviewsToDisplay = this.filterReviews();
     reviewsToDisplay.sort((a, b) => this.sortFunction(a, b));
     reviewsToDisplay = reviewsToDisplay.map(review => <Review data={review} key={review.id} />);
@@ -152,7 +179,7 @@ class Reviews extends React.Component {
           changeSort={e => this.changeSort(e.target.value)}
         />
         <div className={styles.mediumBold}>
-            Filters
+          Filters
         </div>
         <div className={styles.filtersContainer}>
           {this.filters.map(param => (

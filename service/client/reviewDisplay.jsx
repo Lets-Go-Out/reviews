@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Stars from './Stars';
-
 import API from './APICalls';
 import styles from './style.css';
 
@@ -53,12 +52,12 @@ class Review extends React.Component {
 
   markHelpful() {
     const { data } = this.props;
-    API.markHelpful(data.id, () => console.log('this review marked helpful'));
+    API.markHelpful(data.reviewId, () => console.log('this review marked helpful'));
   }
 
   report() {
     const { data } = this.props;
-    API.report(data.id, () => console.log('this review reported'));
+    API.report(data.reviewId, () => console.log('this review reported'));
   }
 
 
@@ -89,13 +88,13 @@ class Review extends React.Component {
           </div>
           <div className={styles.review}>
             <div>
-              <Stars num={data.overall} />
+              <Stars num={data.overallRating} />
             </div>
             <div>
               {`Dined on ${moment(data.date).format('MMMM Do YYYY')}`}
             </div>
             <div>
-              {`Overall ${data.overall} \u00B7 Food ${data.food} \u00B7 Service ${data.service} \u00B7 Ambience ${data.ambience}`}
+              {`Overall ${data.overallRating} \u00B7 Food ${data.foodRating} \u00B7 Service ${data.serviceRating} \u00B7 Ambience ${data.ambienceRating}`}
             </div>
             <div ref={this.review} className={expanded ? styles.review : `${styles.truncated} ${styles.review}`}>
               <div ref={this.text}>
@@ -133,11 +132,11 @@ class Review extends React.Component {
 
 Review.propTypes = {
   data: PropTypes.shape({
-    overall: PropTypes.number.isRequired,
-    food: PropTypes.number.isRequired,
-    service: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-    ambience: PropTypes.number.isRequired,
+    overallRating: PropTypes.number.isRequired,
+    foodRating: PropTypes.number.isRequired,
+    serviceRating: PropTypes.number.isRequired,
+    valueRating: PropTypes.number.isRequired,
+    ambienceRating: PropTypes.number.isRequired,
     text: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,

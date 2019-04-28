@@ -63,7 +63,7 @@ const Summary = ({ info, starsCount, changeSort }) => (
               {info.valueAvg.toFixed(2)}
             </div>
             <div>
-               Value
+              Value
             </div>
           </div>
         </div>

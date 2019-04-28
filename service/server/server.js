@@ -1,3 +1,5 @@
+require('newrelic');
+const loadtest = require('loadtest');
 const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
@@ -20,14 +22,14 @@ app.get('/restaurants/:restaurantid/reviewsummary', (req, res) => {
       console.log(err);
       return res.sendStatus(500);
     }
-    return res.status(200).json(data[0]);
+    return res.status(200).json(data.rows[0]);
   });
 });
 
 app.get('/restaurants/:restaurantid/reviews', (req, res) => {
   db.getReviews(req.params.restaurantid, (err, data) => {
     if (err) { return res.sendStatus(500); }
-    return res.status(200).json(data);
+    return res.status(200).json(data.rows);
   });
 });
 
@@ -45,5 +47,8 @@ app.patch('/reviews/:reviewid/markhelpful', (req, res) => {
   });
 });
 
+// app.get('/loaderio-43623c2f75cbaa14f8f99e1533745370/', (req, res) => {
+//   res.sendFile('./loaderio-43623c2f75cbaa14f8f99e1533745370.txt');
+// })
 
 app.listen(3005);

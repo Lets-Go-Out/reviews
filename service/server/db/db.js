@@ -1,12 +1,11 @@
 const { Pool } = require("pg");
-const pass = require("../../pass");
 
 const pool = new Pool({
   user: "postgres",
-  host: "localhost",
+  host: "18.144.54.80",
   database: "postgres",
-  password: pass,
-  port: 5433
+  password: "aIvZQPpaaLo5",
+  port: 5432
 });
 
 module.exports.addReview = (reviewInfo, cb) => {

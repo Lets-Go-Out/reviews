@@ -10,7 +10,7 @@ const db = require('./db/db.js');
 const pass = require('./pass.js');
 
 // const app = express();
-const client = redis.createClient(6379, '13.56.249.188');
+const client = redis.createClient(6379, '54.67.70.132');
 client.auth(pass);
 
 const loaderioFile = path.join(__dirname, "./loaderio-6511ed504151f4c060f3e11bdb06157e.txt");
@@ -31,27 +31,29 @@ const server = http.createServer((req, res) => {
 		res.writeHead(200, { 'Content-Type': 'text/html' });
 		res.end(content, "binary");
 	});
-      } else if (req.url.match(/(\/restaurants\/[1-9]*\/reviews)/)) {
-        client.get(req.params.restaurantid, (error, result) => {
+      } else if (req.url.match(/(\/restaurants\/[0-9]*\/reviews)/)) {
+	const restaurantid = req.url.split('/')[2];
+        client.get(restaurantid, (error, result) => {
           if (!error && result !== null) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.write(result);
+	    res.write(result);
 	    res.end();
           } else {
-            db.getReviews(req.params.restaurantid, (err, data) => {
+            db.getReviews(restaurantid, (err, data) => {
               if (err) {
                 console.log(err);
                 res.writeHead(500);
               } else {
-                client.set(req.params.restaurantid, JSON.stringify(data.rows));
+                client.set(restaurantid, JSON.stringify(data.rows));
                 res.writeHead(200,  { 'Content-Type': 'application/json' });
-                res.write(data.rows);
+                res.write(JSON.stringify(data.rows));
               }
 	      res.end();
             });
           }
         });
-      } else if (req.url.match(/(\/restaurants\/[1-9]*\/reviewsummary)/)) {
+      } else if (req.url.match(/(\/restaurants\/[0-9]*\/reviewsummary)/)) {
+	const restaurantid = req.url.split('/')[2];
         db.getBasicInfo(req.params.restaurantid, (err, data) => {
           if (err) {
             res.writeHead(500);
@@ -76,7 +78,7 @@ const server = http.createServer((req, res) => {
     case 'POST':
       break;
     case 'PATCH':
-      if (req.url.match(/(\/reviews\/[1-9]*\/report)/)) {
+      if (req.url.match(/(\/reviews\/[0-9]*\/report)/)) {
         db.report(req.params.reviewid, (err) => {
           if (err) { res.writeHead(500); }
           else {
@@ -84,7 +86,7 @@ const server = http.createServer((req, res) => {
           }
 	  res.end();
         });
-      } else if (req.url.match(/(\/reviews\/[1-9]*\/markhelpful)/)) {
+      } else if (req.url.match(/(\/reviews\/[0-9]*\/markhelpful)/)) {
         db.markHelpful(req.params.reviewid, (err) => {
           if (err) { res.writeHead(500); }
           else {

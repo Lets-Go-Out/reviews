@@ -27,17 +27,16 @@ const server = http.createServer((req, res) => {
   switch (req.method) {
     case 'GET':
       if (req.url === "/") {
-        fs.readFile(path.join(__dirname, "../public/index.html"), function (err, data) {
-          response.writeHead(200, { 'Content-Type': 'text/html' });
-          response.write(data);
-          response.end();
-        });
-      }
-      else if (req.url.match(/(\/reviews\/[1-9]*\/restaurants)/)) {
+        fs.readFile(path.join(__dirname, "../public/index.html") ,(error, content) => {
+		res.writeHead(200, { 'Content-Type': 'text/html' });
+		res.end(content, "binary");
+	});
+      } else if (req.url.match(/(\/restaurants\/[1-9]*\/reviews)/)) {
         client.get(req.params.restaurantid, (error, result) => {
           if (!error && result !== null) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.write(result);
+	    res.end();
           } else {
             db.getReviews(req.params.restaurantid, (err, data) => {
               if (err) {
@@ -45,20 +44,22 @@ const server = http.createServer((req, res) => {
                 res.writeHead(500);
               } else {
                 client.set(req.params.restaurantid, JSON.stringify(data.rows));
-                res.writeHead(200);
+                res.writeHead(200,  { 'Content-Type': 'application/json' });
                 res.write(data.rows);
               }
+	      res.end();
             });
           }
         });
-      } else if (req.url.match(/(\/reviews\/[1-9]*\/reviewsummary)/)) {
+      } else if (req.url.match(/(\/restaurants\/[1-9]*\/reviewsummary)/)) {
         db.getBasicInfo(req.params.restaurantid, (err, data) => {
           if (err) {
             res.writeHead(500);
           } else {
-            res.writeHead(200);
+            res.writeHead(200,  { 'Content-Type': 'application/json' });
             res.write(data.rows[0]);
           }
+	  res.end();
         });
       } else if (req.url === '/loaderio-6511ed504151f4c060f3e11bdb06157e') {
         res.writeHead(200, {
@@ -66,8 +67,10 @@ const server = http.createServer((req, res) => {
           "Content-Disposition": "attachment; filename=loaderio-6511ed504151f4c060f3e11bdb06157e.txt"
         });
         fs.createReadStream(loaderioFile).pipe(response);
+	res.end();
       } else {
         res.writeHead(404);
+	res.end();
       }
       break;
     case 'POST':
@@ -79,6 +82,7 @@ const server = http.createServer((req, res) => {
           else {
             res.writeHead(204);
           }
+	  res.end();
         });
       } else if (req.url.match(/(\/reviews\/[1-9]*\/markhelpful)/)) {
         db.markHelpful(req.params.reviewid, (err) => {
@@ -86,14 +90,15 @@ const server = http.createServer((req, res) => {
           else {
             res.writeHead(204);
           }
+	  res.end();
         });
       }
       break;
     case 'DELETE':
       break;
     default:
+	res.end();
   }
-  res.end();
 });
 
 server.listen(80);

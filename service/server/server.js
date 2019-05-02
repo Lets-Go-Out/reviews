@@ -26,7 +26,14 @@ client.on('error', function (err) {
 const server = http.createServer((req, res) => {
   switch (req.method) {
     case 'GET':
-      if (req.url.match(/(\/reviews\/[1-9]*\/restaurants)/)) {
+      if (req.url === "/") {
+        fs.readFile(path.join(__dirname, "../public/index.html"), function (err, data) {
+          response.writeHead(200, { 'Content-Type': 'text/html' });
+          response.write(data);
+          response.end();
+        });
+      }
+      else if (req.url.match(/(\/reviews\/[1-9]*\/restaurants)/)) {
         client.get(req.params.restaurantid, (error, result) => {
           if (!error && result !== null) {
             res.writeHead(200, { 'Content-Type': 'application/json' });

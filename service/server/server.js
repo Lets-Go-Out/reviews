@@ -7,9 +7,11 @@ const fs = require('fs');
 // const compression = require('compression');
 const path = require('path');
 const db = require('./db/db.js');
+const pass = require('./pass.js');
 
 // const app = express();
-const client = redis.createClient(6379, '54.219.186.113');
+const client = redis.createClient(6379, '13.56.249.188');
+client.auth(pass);
 
 const loaderioFile = path.join(__dirname, "./loaderio-6511ed504151f4c060f3e11bdb06157e.txt");
 
@@ -24,28 +26,32 @@ client.on('error', function (err) {
 const server = http.createServer((req, res) => {
   switch (req.method) {
     case 'GET':
-      if (req.url.match(/(\/reviews\/[1-9]*\/restaurants))/)) {
+      if (req.url.match(/(\/reviews\/[1-9]*\/restaurants)/)) {
         client.get(req.params.restaurantid, (error, result) => {
           if (!error && result !== null) {
-            return res.status(200).json(result).end();
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.write(result);
           } else {
             db.getReviews(req.params.restaurantid, (err, data) => {
               if (err) {
                 console.log(err);
-                return res.status(500).end();
+                res.writeHead(500);
+              } else {
+                client.set(req.params.restaurantid, JSON.stringify(data.rows));
+                res.writeHead(200);
+                res.write(data.rows);
               }
-              client.set(req.params.restaurantid, JSON.stringify(data.rows));
-              return res.status(200).json(data.rows).end();
             });
           }
         });
-      } else if (req.url.match(/(\/reviews\/[1-9]*\/reviewsummary))/)) {
+      } else if (req.url.match(/(\/reviews\/[1-9]*\/reviewsummary)/)) {
         db.getBasicInfo(req.params.restaurantid, (err, data) => {
           if (err) {
-            //console.log(err);
-            return res.status(500).end();
+            res.writeHead(500);
+          } else {
+            res.writeHead(200);
+            res.write(data.rows[0]);
           }
-          return res.status(200).json(data.rows[0]).end();
         });
       } else if (req.url === '/loaderio-6511ed504151f4c060f3e11bdb06157e') {
         res.writeHead(200, {
@@ -54,21 +60,25 @@ const server = http.createServer((req, res) => {
         });
         fs.createReadStream(loaderioFile).pipe(response);
       } else {
-        res.status(404).end();
+        res.writeHead(404);
       }
       break;
     case 'POST':
       break;
     case 'PATCH':
-      if (req.url.match(/(\/reviews\/[1-9]*\/report))/)) {
+      if (req.url.match(/(\/reviews\/[1-9]*\/report)/)) {
         db.report(req.params.reviewid, (err) => {
-          if (err) { return res.status(500).end(); }
-          return res.status(204).end();
+          if (err) { res.writeHead(500); }
+          else {
+            res.writeHead(204);
+          }
         });
-      } else if (req.url.match(/(\/reviews\/[1-9]*\/markhelpful))/)) {
+      } else if (req.url.match(/(\/reviews\/[1-9]*\/markhelpful)/)) {
         db.markHelpful(req.params.reviewid, (err) => {
-          if (err) { return res.status(500).end(); }
-          return res.sendStatus(204).end();
+          if (err) { res.writeHead(500); }
+          else {
+            res.writeHead(204);
+          }
         });
       }
       break;

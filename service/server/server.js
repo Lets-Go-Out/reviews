@@ -2,25 +2,31 @@ require('newrelic');
 const redis = require('redis');
 const http = require('http');
 const fs = require('fs');
-// const express = require('express');
-// const cors = require('cors');
-// const compression = require('compression');
 const path = require('path');
 const db = require('./db/db.js');
 const pass = require('./pass.js');
 
-// const app = express();
-const client = redis.createClient(6379, '54.67.70.132');
-client.auth(pass);
+//const client = redis.createClient(6379, '54.183.148.109');
+//client.auth(pass);
 
-const loaderioFile = path.join(__dirname, "./loaderio-6511ed504151f4c060f3e11bdb06157e.txt");
+const localClient = redis.createClient(6379, '127.0.0.1');
 
-client.on('connect', function () {
-  console.log('Redis client connected');
+const loaderioFile = path.join(__dirname, "./loaderio-c83d214aa1c61fe729ae6c57a389daed.txt");
+
+//client.on('connect', function () {
+//  console.log('Redis client connected');
+//});
+
+localClient.on('connect', function () {
+  console.log('Local redis connected');
 });
 
-client.on('error', function (err) {
-  console.log('Something went wrong ' + err);
+//client.on('error', function (err) {
+//  console.log('Something went wrong ' + err);
+//});
+
+localClient.on('error', function (err) {
+  console.log('Something went wrong with local redis ' + err);
 });
 
 const server = http.createServer((req, res) => {
@@ -33,17 +39,24 @@ const server = http.createServer((req, res) => {
 	});
       } else if (req.url.match(/(\/restaurants\/[0-9]*\/reviews)/)) {
 	const restaurantid = req.url.split('/')[2];
-        client.get(restaurantid, (error, result) => {
-          if (!error && result !== null) {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-	    res.write(result);
-	    res.end();
-          } else {
+	localClient.get(restaurantid, (error, result) => {
+		if(!error && result !== null) {
+			res.writeHead(200, { 'Content-Type': 'application/json' });
+			res.write(result);
+			res.end();
+		} else {
+        //client.get(restaurantid, (error, result) => {
+        //  if (!error && result !== null) {
+        //    res.writeHead(200, { 'Content-Type': 'application/json' });
+	//    res.write(result);
+	//    res.end();
+        //  } else {
             db.getReviews(restaurantid, (err, data) => {
               if (err) {
                 console.log(err);
                 res.writeHead(500);
               } else {
+		localClient.set(restaurantid, JSON.stringify(data.rows));
                 client.set(restaurantid, JSON.stringify(data.rows));
                 res.writeHead(200,  { 'Content-Type': 'application/json' });
                 res.write(JSON.stringify(data.rows));
@@ -52,6 +65,7 @@ const server = http.createServer((req, res) => {
             });
           }
         });
+	//}});
       } else if (req.url.match(/(\/restaurants\/[0-9]*\/reviewsummary)/)) {
 	const restaurantid = req.url.split('/')[2];
         db.getBasicInfo(req.params.restaurantid, (err, data) => {
@@ -63,13 +77,14 @@ const server = http.createServer((req, res) => {
           }
 	  res.end();
         });
-      } else if (req.url === '/loaderio-6511ed504151f4c060f3e11bdb06157e') {
+      } else if (req.url === '/loaderio-c83d214aa1c61fe729ae6c57a389daed/') {
         res.writeHead(200, {
           "Content-Type": "text/plain",
-          "Content-Disposition": "attachment; filename=loaderio-6511ed504151f4c060f3e11bdb06157e.txt"
+          "Content-Disposition": "attachment; filename=loaderio-c83d214aa1c61fe729ae6c57a389daedloaderio-c83d214aa1c61fe729ae6c57a389daed.txt"
         });
-        fs.createReadStream(loaderioFile).pipe(response);
-	res.end();
+        fs.readFile(loaderioFile, (error, content) => {
+		res.end(content);
+	});
       } else {
         res.writeHead(404);
 	res.end();
@@ -105,59 +120,3 @@ const server = http.createServer((req, res) => {
 
 server.listen(80);
 
-// app.use(cors());
-// app.use(compression());
-
-
-// app.use('/restaurants/:restaurantid', express.static('./public'));
-
-// app.use(express.static('./public'));
-
-
-
-// app.get('/restaurants/:restaurantid/reviewsummary', (req, res) => {
-//   db.getBasicInfo(req.params.restaurantid, (err, data) => {
-//     if (err) {
-//       //console.log(err);
-//       return res.sendStatus(500);
-//     }
-//     return res.status(200).json(data.rows[0]);
-//   });
-// });
-
-// app.get('/restaurants/:restaurantid/reviews', (req, res) => {
-//   client.get(req.params.restaurantid, (error, result) => {
-//     if (!error && result !== null) {
-//       return res.status(200).json(result);
-//     } else {
-//       db.getReviews(req.params.restaurantid, (err, data) => {
-//         if (err) {
-//           console.log(err);
-//           return res.sendStatus(500);
-//         }
-//         client.set(req.params.restaurantid, JSON.stringify(data.rows));
-//         return res.status(200).json(data.rows);
-//       });
-//     }
-//   });
-// });
-
-// app.patch('/reviews/:reviewid/report', (req, res) => {
-//   db.report(req.params.reviewid, (err) => {
-//     if (err) { return res.sendStatus(500); }
-//     return res.sendStatus(204);
-//   });
-// });
-
-// app.patch('/reviews/:reviewid/markhelpful', (req, res) => {
-//   db.markHelpful(req.params.reviewid, (err) => {
-//     if (err) { return res.sendStatus(500); }
-//     return res.sendStatus(204);
-//   });
-// });
-
-// app.get('/loaderio-6511ed504151f4c060f3e11bdb06157e', (req, res) => {
-//   res.sendFile(path.join(__dirname, './loaderio-6511ed504151f4c060f3e11bdb06157e.txt'));
-// })
-
-// app.listen(80);
